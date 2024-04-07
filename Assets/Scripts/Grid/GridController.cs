@@ -26,6 +26,7 @@ namespace Xolito.Utilities
         [SerializeField] bool random = false;
         [SerializeField] bool showCursor = true;
 
+        Vector2Int elementsPerUnit;
         int spriteIndex = 0;
         (int y, int x) currentCell = default;
         (float x, float y) currentOffset = default;
@@ -122,6 +123,7 @@ namespace Xolito.Utilities
             public int headIdx = 0;
             private bool isTrigger = false;
 
+
             public Block First => blocks == null || blocks.Count == 0 ? null : blocks[0];
             public Block Last => blocks == null || blocks.Count == 0 ? null : blocks[blocks.Count - 1];
             public Block Head => blocks == null || blocks.Count == 0 ? null : blocks[headIdx];
@@ -136,13 +138,20 @@ namespace Xolito.Utilities
                     isTrigger = value;
                 } 
             }
+            public string Tag
+            {
+                get => collider.tag;
+                set => collider.tag = value;
+            }
+            public Vector2Int ElementsPerUnit { get; set; }
 
-            public ColliderData(string name, Block block, bool? isHorizontal)
+            public ColliderData(string name, Block block, bool? isHorizontal, Vector2Int elementsPerUnit)
             {
                 this.item = new GameObject(name, typeof(BoxCollider2D));
                 collider = item.GetComponent<BoxCollider2D>();
                 blocks = new List<Block>();
                 this.isHorizontal = isHorizontal;
+                ElementsPerUnit = elementsPerUnit;
 
                 AddFirst(block);
             }
@@ -199,6 +208,16 @@ namespace Xolito.Utilities
             public Point((int y, int x) point) => (y, x) = point;
         }
 
+        #endregion
+
+        #region Properties
+        public event Action<bool> OnShowCursorEnabled;
+        public event Action<bool> OnRandomEnabled;
+        public event Action<bool> OnDrawLinesEnabled;
+
+        public bool ShowCursor { get => showCursor; }
+        public bool Random { get => random; }
+        public bool DrawLines { get => drawLines; }
         #endregion
 
         #region Unity methods
@@ -391,6 +410,7 @@ namespace Xolito.Utilities
                     newValue = 1;
 
                 type = (BlockType)newValue;
+                elementsPerUnit = sprites.GetSpriteAmount(color, type);
                 Get_Sprite();
             }
             else if (Input.GetKeyDown(KeyCode.K))
@@ -402,6 +422,7 @@ namespace Xolito.Utilities
                     newValue = values.Length - 1;
 
                 type = (BlockType)newValue;
+                elementsPerUnit = sprites.GetSpriteAmount(color, type);
                 Get_Sprite();
             }
         }
@@ -437,11 +458,14 @@ namespace Xolito.Utilities
                     Get_Sprite();
                 else
                     spriteInMouse.sprite = null;
+
+                OnShowCursorEnabled?.Invoke(value);
             }
 
             if (Input.GetKeyDown(KeyCode.G))
             {
                 drawLines = !drawLines;
+                OnDrawLinesEnabled?.Invoke(drawLines);
             }
 
             if (Input.GetKeyDown(KeyCode.I))
@@ -459,7 +483,7 @@ namespace Xolito.Utilities
                 try
                 {
                     grid[currentCell.y, currentCell.x].Sprite = null;
-                    grid[currentCell.y, currentCell.x].data.sprite = new SpriteData(color, type);
+                    grid[currentCell.y, currentCell.x].data.sprite = new SpriteData(color, type, elementsPerUnit);
                     grid[currentCell.y, currentCell.x].block.transform.parent = parents[BlockType.None].transform;
                     Remove_Collider(new Point(currentCell.y, currentCell.x));
                     lastCell.hasValue = false;
@@ -467,7 +491,11 @@ namespace Xolito.Utilities
                 catch (IndexOutOfRangeException) { }
             }
 
-            if (Input.GetKeyDown(KeyCode.R)) random = !random;
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                random = !random;
+                OnRandomEnabled?.Invoke(random);
+            }
         }
         #endregion
 
@@ -482,7 +510,7 @@ namespace Xolito.Utilities
 
             var cur = grid[currentCell.y, currentCell.x];
             cur.Sprite = sprites.GetSprite(color, type, spriteIndex);
-            cur.data.sprite = new SpriteData(color, type);
+            cur.data.sprite = new SpriteData(color, type, elementsPerUnit);
             cur.block.transform.parent = parents[type].transform;
             cur.block.transform.position = spriteInMouse.transform.position;
             cur.data.Type = type;
@@ -502,10 +530,9 @@ namespace Xolito.Utilities
                     {
                         var block = grid[points[i].y, points[i].x];
 
-                        if (block.Collider.HasValue && block.data.Type != type)
+                        if (block.Collider.HasValue)
                             Remove_Collider(new Point(block.Position));
 
-                        block.block.tag = "Untagged";
                         Remove_Interactable(block.block);
                     }
 
@@ -516,11 +543,10 @@ namespace Xolito.Utilities
                     {
                         var block = grid[points[i].y, points[i].x];
 
-                        if (block.Collider.HasValue && block.data.Type != type)
+                        if (block.Collider.HasValue)
                             Remove_Collider(new Point(block.Position));
 
-                        block.block.tag = "Platform";
-                        block.block.AddComponent<BoxCollider2D>().isTrigger = true;
+                        SetUp_Trigger(ref block, "Platform");
 
                         Remove_Interactable(block.block);
                     }
@@ -533,57 +559,29 @@ namespace Xolito.Utilities
                     {
                         var block = grid[points[i].y, points[i].x];
 
-                        //if (block.data.Type != type)
-                        //    Remove_Collider(new Point(block.Position));
-
-                        block.block.tag = "Untagged";
                         Remove_Interactable(block.block);
                     }
                     Find_Pairs(points);
                     break;
 
-                //case ActionType.Coin:
+                case ActionType.Coin:
 
-                //    if (block.Collider.HasValue && block.data.Type != type)
-                //        Remove_Collider(new Point(block.Position));
+                    SetUp_InteractableBlocks(points, Interaction.Coin);
 
-                //    block.block.AddComponent<InteractableObject>().Interaction = Interaction.Coin;
-                //    block.block.AddComponent<BoxCollider2D>().isTrigger = true;
+                    break;
 
-                //    break;
+                case ActionType.Enemy:
 
-                //case ActionType.Enemy:
+                    SetUp_InteractableBlocks(points, Interaction.Damage);
 
-                //    if (block.Collider.HasValue && block.data.Type != type)
-                //        Remove_Collider(new Point(block.Position));
-
-                //    block.block.AddComponent<InteractableObject>().Interaction = Interaction.Damage;
-                //    block.block.AddComponent<BoxCollider2D>().isTrigger = true;
-
-                //    break;
+                    break;
 
                 case ActionType.FinalPoint:
 
-                    for (int i = 0; i < points.Length; i++)
-                    {
-                        var block = grid[points[i].y, points[i].x];
+                    SetUp_InteractableBlocks(points, Interaction.EndPoint);
 
-                        if (block.Collider.HasValue && block.data.Type != type)
-                            Remove_Collider(new Point(block.Position));
-
-                        SetpUp_Trigger(ref block);
-                        block.block.tag = "Untagged";
-
-                        FindObjectOfType<LevelController>().AddStartPoint(block.block, block.data.sprite.color);
-
-                        InteractableObject interactable;
-                        if (block.block.TryGetComponent(out interactable))
-                        {
-                            interactable.Interaction = Interaction.EndPoint;
-                        }
-                        else
-                            block.block.AddComponent<InteractableObject>().Interaction = Interaction.EndPoint;
-                    }
+                    var cur = grid[points[0].y, points[0].x];
+                    FindObjectOfType<LevelController>().AddStartPoint(cur.block, cur.data.sprite.color);
 
                     break;
 
@@ -592,10 +590,9 @@ namespace Xolito.Utilities
                     {
                         var block = grid[points[i].y, points[i].x];
 
-                        if (block.Collider.HasValue && block.data.Type != type)
+                        if (block.Collider.HasValue)
                             Remove_Collider(new Point(block.Position));
 
-                        block.block.tag = "Untagged";
                         Remove_Interactable(block.block);
 
                         FindObjectOfType<LevelController>().AddStartPoint(block.block, block.data.sprite.color);
@@ -615,6 +612,33 @@ namespace Xolito.Utilities
                 {
                     Destroy(interactable);
                 }
+            }
+
+            void SetUp_InteractableBlocks(Point[] points, Interaction interaction)
+            {
+                for (int i = 0; i < points.Length; i++)
+                {
+                    var block = grid[points[i].y, points[i].x];
+
+                    if (block.Collider.HasValue)
+                        Remove_Collider(new Point(block.Position));
+
+                    block.block.tag = "Untagged";
+                    SetUp_Trigger(ref block);
+
+                    Add_Interaction(block, interaction);
+                }
+            }
+
+            static void Add_Interaction(Block block, Interaction interaction)
+            {
+                InteractableObject interactable;
+                if (block.block.TryGetComponent(out interactable))
+                {
+                    interactable.Interaction = interaction;
+                }
+                else
+                    block.block.AddComponent<InteractableObject>().Interaction = interaction;
             }
         }
 
@@ -684,7 +708,7 @@ namespace Xolito.Utilities
                     for (int i = start; i != end;)
                     {
                         grid[i, lastCell.x].Sprite = spriteInMouse.sprite;
-                        grid[i, lastCell.x].data.sprite = new SpriteData(color, type);
+                        grid[i, lastCell.x].data.sprite = new SpriteData(color, type, elementsPerUnit);
                         grid[i, lastCell.x].data.Type = type;
                         Get_Sprite();
 
@@ -706,7 +730,7 @@ namespace Xolito.Utilities
                     for (int i = start; i != end;)
                     {
                         grid[lastCell.y, i].Sprite = spriteInMouse.sprite;
-                        grid[lastCell.y, i].data.sprite = new SpriteData(color, type);
+                        grid[lastCell.y, i].data.sprite = new SpriteData(color, type, elementsPerUnit);
                         grid[lastCell.y, i].data.Type = type;
                         Get_Sprite();
 
@@ -746,7 +770,7 @@ namespace Xolito.Utilities
             if (grid[y, x].Sprite != null) return;
 
             grid[y, x].Sprite = spriteInMouse.sprite;
-            grid[y, x].data.sprite = new SpriteData(color, type);
+            grid[y, x].data.sprite = new SpriteData(color, type, elementsPerUnit);
             Get_Sprite();
 
             var directions = new[]
@@ -889,7 +913,8 @@ namespace Xolito.Utilities
 
             if (!cur.collider.HasValue)
             {
-                col = Create_NewCollider(horizontal, cur);
+                var data = cur.data.sprite;
+                col = Create_NewCollider(horizontal, cur, data.amount);
             }
             else
                 col = colliders[cur.collider.Value];
@@ -928,10 +953,11 @@ namespace Xolito.Utilities
 
         }
 
-        void SetpUp_Trigger(ref Block block)
+        void SetUp_Trigger(ref Block block, string tag = "Untagged")
         {
-            var data = Create_NewCollider(true, block);
+            var data = Create_NewCollider(true, block, block.data.sprite.amount);
             data.IsTrigger = true;
+            data.Tag = tag;
 
             Set_BlocksCollider(ref block, data, true);
             Set_ColliderSize(true, data);
@@ -956,10 +982,10 @@ namespace Xolito.Utilities
             }
         }
 
-        private ColliderData Create_NewCollider(bool? horizontal, Block cur)
+        private ColliderData Create_NewCollider(bool? horizontal, Block cur, Vector2Int elementsPerUnit)
         {
             ColliderData col;
-            var data = new ColliderData($"Col{colliders.Count}", cur, horizontal);
+            var data = new ColliderData($"Col{colliders.Count}", cur, horizontal, elementsPerUnit);
             bool added = false;
 
             for (int i = 0; i < colliders.Count; i++)
@@ -989,15 +1015,21 @@ namespace Xolito.Utilities
 
         void Set_ColliderSize(bool? horizontal, ColliderData col)
         {
+            var amountPerUnit = new Vector2Int()
+            {
+                x = col.ElementsPerUnit.x <= 0 ? 1 : col.ElementsPerUnit.x,
+                y = col.ElementsPerUnit.y <= 0 ? 1 : col.ElementsPerUnit.y
+            };
+
             if (!horizontal.HasValue || horizontal.Value)
             {
                 col.collider.offset = new Vector2(.445f * (col.blocks.Count - 1), 0);
-                col.collider.size = new Vector2(.89f * col.blocks.Count, .83f);
+                col.collider.size = new Vector2(.89f * col.blocks.Count / amountPerUnit.x, .83f / amountPerUnit.y);
             }
             else
             {
                 col.collider.offset = new Vector2(0, .42f * (col.blocks.Count - 1));
-                col.collider.size = new Vector2(.89f, .83f * col.blocks.Count);
+                col.collider.size = new Vector2(.89f / amountPerUnit.x, .83f * col.blocks.Count / amountPerUnit.y);
             }
         }
 

@@ -6,11 +6,13 @@ namespace Xolito.Utilities
     {
         public ColorType color;
         public BlockType type;
+        public Vector2Int amount;
 
-        public SpriteData(ColorType color, BlockType type)
+        public SpriteData(ColorType color, BlockType type, Vector2Int amount)
         {
             this.color = color;
             this.type = type;
+            this.amount = amount;
         }
     }
 }

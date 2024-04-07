@@ -13,7 +13,7 @@ namespace Xolito.Utilities
         public List<Sprite> sprites;
         public BlockType type;
         public ActionType action;
-        public Vector2 amount;
+        public Vector2Int amount;
 
         public Sprite this [int index] { get => sprites[index]; }
     }
@@ -35,6 +35,7 @@ namespace Xolito.Utilities
         Final,
         Enemies,
         Background,
+        Collectables
     }
 
     public enum ActionType

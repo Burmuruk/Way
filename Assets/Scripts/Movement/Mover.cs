@@ -205,22 +205,23 @@ namespace Xolito.Movement
                 Vector2 pos = boxCollider.transform.position;
                 Vector2 hitPos = hit.collider.transform.position;
 
-                return Destiny.normalized switch
-                {
-                    { x: -1 } when (hit.point.x <= boxCollider.bounds.min.x) =>
-                        (boxCollider.bounds.min.x) - (hit.point.x),
+                //return Destiny.normalized switch
+                //{
+                //    { x: -1 } when (hit.point.x <= boxCollider.bounds.min.x) =>
+                //        (boxCollider.bounds.min.x) - (hit.point.x),
 
-                    { x: 1 } when (hit.point.x >= boxCollider.bounds.max.x) =>
-                        (hit.point.x) - (boxCollider.bounds.max.x),
+                //    { x: 1 } when (hit.point.x >= boxCollider.bounds.max.x) =>
+                //        (hit.point.x) - (boxCollider.bounds.max.x),
 
-                    { y: -1 } when (hit.point.y <= boxCollider.bounds.min.y) =>
-                        (boxCollider.bounds.min.y) - (hit.point.y),
+                //    { y: -1 } when (hit.point.y <= boxCollider.bounds.min.y) =>
+                //        (boxCollider.bounds.min.y) - (hit.point.y),
 
-                    { y: 1 } when (hit.point.y >= boxCollider.bounds.max.y) =>
-                        (hit.point.y) - (boxCollider.bounds.max.y),
+                //    { y: 1 } when (hit.point.y >= boxCollider.bounds.max.y) =>
+                //        (hit.point.y) - (boxCollider.bounds.max.y),
 
-                    _ => null,
-                };
+                //    _ => null,
+                //};
+
                 //return Destiny.normalized switch
                 //{
                 //    { x: -1 } when (hit.collider.bounds.max.x <= boxCollider.bounds.min.x) =>
@@ -237,6 +238,23 @@ namespace Xolito.Movement
 
                 //    _ => null,
                 //};
+
+                return Destiny.normalized switch
+                {
+                    { x: -1 } when (hitPos.x + hit.collider.bounds.max.x <= pos.x + boxCollider.bounds.min.x) =>
+                        (pos.x + boxCollider.bounds.min.x) - (hitPos.x + hit.collider.bounds.max.x),
+
+                    { x: 1 } when (hitPos.x + hit.collider.bounds.min.x >= pos.x + boxCollider.bounds.max.x) =>
+                        (hitPos.x + hit.collider.bounds.min.x) - (pos.x + boxCollider.bounds.max.x),
+
+                    { y: -1 } when (hitPos.y + hit.collider.bounds.max.y <= pos.y + boxCollider.bounds.min.y) =>
+                        boxCollider.bounds.min.y - hit.collider.bounds.max.y,
+
+                    { y: 1 } when (hitPos.y + hit.collider.bounds.min.y >= pos.y + boxCollider.bounds.max.y) =>
+                        hit.collider.bounds.min.y - boxCollider.bounds.max.y,
+
+                    _ => null,
+                };
             }
         }
 

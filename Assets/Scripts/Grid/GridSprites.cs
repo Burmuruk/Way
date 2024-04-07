@@ -32,6 +32,14 @@ namespace Xolito.Utilities
             return spritesData[color][type].action;
         }
 
+        public Vector2Int GetSpriteAmount(ColorType color, BlockType type)
+        {
+            if (spritesData == null || applyChanges) 
+                Initialize();
+
+            return spritesData[color][type].amount;
+        }
+
         public int Get_SpritesCount(ColorType color, BlockType type)
         {
             int result = -1;
