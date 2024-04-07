@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 601bcf56cefda63498681f06b7a10827, type: 3}
+  m_Name: PlayerSettings
+  m_EditorClassIdentifier: 
+  tagsToAvoid:
+  - Platform
+  gravity: 3
+  speed: 2.5
+  jumpForce: 5
+  jumpCoolDown: 1
+  groundDistance: 1.83
+  groundSize: 0.3
+  coyoteTime: 2
+  wallDistance: 0.3
+  wallSize: 0.4
+  jumpSize: 0.1
+  dashOffset: 0.1
+  dashDistance: 2
+  dashSpeed: 10
+  dashTime: 0.6
+  dashCoolDown: 1
+  audios:
+  - clip: {fileID: 8300000, guid: 1b9912a70cbfed2499daf37ad64a3304, type: 3}
+    action: 5
+  - clip: {fileID: 8300000, guid: 1420ce24a2bac844cb680a383d0560e8, type: 3}
+    action: 3
+  - clip: {fileID: 8300000, guid: 29b4e40e4dda6e4429b875a2f5c61c86, type: 3}
+    action: 4
+  - clip: {fileID: 8300000, guid: eed0022fb4ed58e47ac1b1a3cb1c8bd6, type: 3}
+    action: 2
+  - clip: {fileID: 8300000, guid: d80ff4da9c6e2c54fbc6b6cd4f4594b2, type: 3}
+    action: 6
