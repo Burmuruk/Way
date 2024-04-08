@@ -62,26 +62,28 @@ namespace Xolito.Core
         public void Restart_Players()
         {
             var (p1, p2) = (
-                Find_StartPoint(startPointUp, "White"),
-                Find_StartPoint(startPointDown, "Black"));
+                startPointUp ? startPointUp.transform.position + Vector3.up * .4f : default,
+                startPointDown ? startPointDown.transform.position + Vector3.up * .4f : default
+            );
 
             manager1.Respawn(p1, p2);
+        }
 
-            Vector3 Find_StartPoint(GameObject point, string end)
+        public void Set_StartPoint(GameObject point, bool isWhite, bool shouldAdd)
+        {
+            if (shouldAdd)
             {
-                var position = Vector3.zero;
-
-                if (!point)
-                {
-                    var restult = GameObject.Find("StartPoint" + end);
-
-                    if (restult != null) 
-                        return restult.transform.position + Vector3.up * .3f;
-                }
+                if (isWhite)
+                    startPointUp = point;
                 else
-                    return point.transform.position + Vector3.up * .3f;
-
-                return Vector3.zero;
+                    startPointDown = point; 
+            }
+            else
+            {
+                if (isWhite)
+                    startPointUp = null; 
+                else
+                    startPointDown = null;
             }
         }
 

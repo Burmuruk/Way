@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 //using UnityEngine.UIElements;
 using Xolito.Core;
@@ -26,6 +27,8 @@ namespace Xolito.Utilities
         [SerializeField] bool random = false;
         [SerializeField] bool showCursor = true;
 
+        LevelController lvlController;
+
         Vector2Int elementsPerUnit;
         int spriteIndex = 0;
         (int y, int x) currentCell = default;
@@ -35,6 +38,7 @@ namespace Xolito.Utilities
         Block[,] grid;
         List<ColliderData> colliders = new List<ColliderData>();
         GameObject collidersParent;
+        List<(Point point, ColorType color)> startPoints;
         Vector2 blockSize = default;
         Vector2 blockExtends = default;
         Vector2 platformSize = default;
@@ -206,6 +210,22 @@ namespace Xolito.Utilities
             }
 
             public Point((int y, int x) point) => (y, x) = point;
+
+            public static bool operator == (Point a, Point b)
+            {
+                if (a.y == b.y && a.x == b.x) 
+                    return true;
+                    
+                return false;
+            }
+
+            public static bool operator !=(Point a, Point b)
+            {
+                if (a.y != b.y || a.x != b.x)
+                    return true;
+
+                return false;
+            }
         }
 
         #endregion
@@ -226,6 +246,8 @@ namespace Xolito.Utilities
             blockSize = new Vector2(Camera.main.pixelWidth / columns, Camera.main.pixelHeight / rows);
             platformSize = new Vector2(Camera.main.pixelWidth / columns, Camera.main.pixelHeight / (rows * 2));
             blockExtends = new Vector2(blockSize.x / 2, blockSize.y / 2);
+            lvlController = FindObjectOfType<LevelController>();
+            startPoints = new List<(Point point, ColorType color)>();
 
             Initialize();
             Get_Sprite();
@@ -260,7 +282,6 @@ namespace Xolito.Utilities
 
         private void RespawnPlayers()
         {
-            var lvlController = FindObjectOfType<LevelController>();
             lvlController.Restart_Players();
             Invoke("SleepPlayers", .1f);
         }
@@ -580,9 +601,6 @@ namespace Xolito.Utilities
 
                     SetUp_InteractableBlocks(points, Interaction.EndPoint);
 
-                    var cur = grid[points[0].y, points[0].x];
-                    FindObjectOfType<LevelController>().AddStartPoint(cur.block, cur.data.sprite.color);
-
                     break;
 
                 case ActionType.StartPoint:
@@ -596,6 +614,10 @@ namespace Xolito.Utilities
                         Remove_Interactable(block.block);
 
                         FindObjectOfType<LevelController>().AddStartPoint(block.block, block.data.sprite.color);
+                        var point = new Point(block.Position);
+
+                        startPoints.Add((point, color));
+                        lvlController.Set_StartPoint(block.block, color == ColorType.White, true);
                     }
 
                     Find_Pairs(points);
@@ -753,6 +775,8 @@ namespace Xolito.Utilities
         {
             ref var block = ref grid[blockInd.y, blockInd.x];
 
+            ReportPieceDeletion(in blockInd);
+
             if (!block.Collider.HasValue) return;
 
             if (colliders[block.Collider.Value].blocks.Count > 1)
@@ -762,6 +786,25 @@ namespace Xolito.Utilities
                 Destroy(colliders[block.Collider.Value].item);
                 colliders[block.collider.Value] = null;
                 block.collider = null;
+            }
+        }
+
+        private void ReportPieceDeletion(in Point startPoint)
+        {
+            int i = 0;
+
+            foreach (var point in startPoints)
+            {
+                if (point.point == startPoint)
+                {
+                    var go = grid[startPoint.y, startPoint.x].block;
+
+                    lvlController.Set_StartPoint(go, point.color == ColorType.White, false);
+                    startPoints.RemoveAt(i);
+
+                    return;
+                }
+                i++;
             }
         }
 
@@ -854,12 +897,12 @@ namespace Xolito.Utilities
                     ref var dir = ref directions[dirIdx];
                     ref var cur = ref grid[firstP.y + dir.Y, firstP.x + dir.X];
 
-                    if (cur.Sprite && cur.data.sprite.type != BlockType.Platform && cur.data.sprite.type != BlockType.Enemies)
+                    if (cur.Sprite && cur.data.sprite.type == BlockType.Ground)
                     {
                         if (cur.collider.HasValue && (cur.data.isHorizontal.HasValue && cur.data.isHorizontal != dir.isH))
                             continue;
 
-                        if (colliders[cur.collider.Value].IsTrigger || colliders[cur.collider.Value].IsTrigger)
+                        if (cur.collider.HasValue && (colliders[cur.collider.Value].IsTrigger || colliders[cur.collider.Value].IsTrigger))
                             continue;
 
                         switch (dirIdx)
