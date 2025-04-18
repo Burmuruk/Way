@@ -65,11 +65,4 @@ namespace Xolito.Utilities
             this.backGround = backGround;
         }
     }
-
-    public class ColliderData
-    {
-        public Vector2 size;
-        public Vector2 offset;
-        public Vector2[] blocks;
-    }
 }

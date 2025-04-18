@@ -156,7 +156,7 @@ namespace Xolito.Movement
             };
 
             float angle = Get_Angle(Destiny.normalized);
-            hit2D = Physics2D.BoxCastAll(startPosition, newSize, angle, finalPosition.normalized, Destiny.magnitude);
+            hit2D = Physics2D.BoxCastAll(startPosition, newSize, angle, finalPosition.normalized, Destiny.magnitude, 1<<0);
 
             (float? nearestDistance, GameObject item) result = default;
 

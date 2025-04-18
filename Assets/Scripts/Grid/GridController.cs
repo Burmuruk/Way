@@ -29,6 +29,7 @@ namespace Xolito.Utilities
 
         LevelController lvlController;
 
+        const int INTERACTION_LAYER = 10;
         Vector2Int elementsPerUnit;
         int spriteIndex = 0;
         (int y, int x) currentCell = default;
@@ -56,176 +57,6 @@ namespace Xolito.Utilities
             Horizontal = Left | Right,
             Vertical = Down | Up,
             All = Left | Right | Down | Up,
-        }
-        public class Block
-        {
-            public GameObject block;
-            public GameObject backGround;
-            public SpriteRenderer renderer;
-            public SpriteRenderer bRenderer;
-            public BlockData data;
-            public int? collider = null;
-
-            public Sprite Sprite { get => renderer.sprite; set => renderer.sprite = value; }
-            public Sprite BSprite
-            {
-                get => bRenderer?.sprite;
-                set
-                {
-                    if (backGround is null)
-                    {
-                        backGround = new GameObject(block.name + " Back", typeof(SpriteRenderer));
-                        backGround.transform.position = block.transform.position;
-                        bRenderer = backGround.GetComponent<SpriteRenderer>();
-                    }
-
-                    if (value is null)
-                        backGround = null;
-                    else
-                        bRenderer.sprite = value;
-                }
-            }
-            public bool? IsHorizontal { get => data.isHorizontal; set => data.isHorizontal = value; }
-            public int? Collider
-            {
-                get => collider;
-                set
-                {
-                    collider = value;
-                    data.colliderPosition = new Vector2
-                    {
-                        x = Int32.Parse(block.name.Substring(5, 1)),
-                        y = Int32.Parse(block.name.Substring(5, 1)),
-                    };
-                }
-            }
-            public (int y, int x) Position { get => data.position; }
-
-            public static bool operator true(Block block) => block != null;
-            public static bool operator false(Block block) => block == null;
-            public static bool operator !(Block block)
-            {
-                if (block != null)
-                    return true;
-                else
-                    return false;
-            }
-
-            public Block(int row, int column)
-            {
-                block = new GameObject($"Block{row},{column}", typeof(SpriteRenderer));
-                renderer = block.GetComponent<SpriteRenderer>();
-                data = new BlockData((row, column));
-            }
-        }
-        public class ColliderData
-        {
-            public GameObject item;
-            public List<Block> blocks;
-            public BoxCollider2D collider;
-            public bool? isHorizontal = null;
-            public int headIdx = 0;
-            private bool isTrigger = false;
-
-
-            public Block First => blocks == null || blocks.Count == 0 ? null : blocks[0];
-            public Block Last => blocks == null || blocks.Count == 0 ? null : blocks[blocks.Count - 1];
-            public Block Head => blocks == null || blocks.Count == 0 ? null : blocks[headIdx];
-            public bool IsTrigger 
-            { 
-                get => isTrigger; 
-                set 
-                { 
-                    if (collider)
-                        collider.isTrigger = value; 
-
-                    isTrigger = value;
-                } 
-            }
-            public string Tag
-            {
-                get => collider.tag;
-                set => collider.tag = value;
-            }
-            public Vector2Int ElementsPerUnit { get; set; }
-
-            public ColliderData(string name, Block block, bool? isHorizontal, Vector2Int elementsPerUnit)
-            {
-                this.item = new GameObject(name, typeof(BoxCollider2D));
-                collider = item.GetComponent<BoxCollider2D>();
-                blocks = new List<Block>();
-                this.isHorizontal = isHorizontal;
-                ElementsPerUnit = elementsPerUnit;
-
-                AddFirst(block);
-            }
-
-            public void AddFirst(Block block) => blocks.Insert(0, block);
-            public void AddLast(Block block) => blocks.Insert(blocks.Count, block);
-            public void RemoveFirst()
-            {
-                blocks[0].collider = null;
-                blocks.RemoveAt(0);
-            }
-            public void RemoveLast()
-            {
-                if (headIdx == blocks.Count - 1)
-                    headIdx = blocks.Count - 2;
-
-                blocks[blocks.Count - 1].collider = null;
-                blocks.RemoveAt(blocks.Count - 1);
-            }
-
-            public void Clear()
-            {
-                foreach (var block in blocks)
-                    block.collider = null;
-
-                blocks.Clear();
-                Destroy(item);
-            }
-
-            public Point[] GetPoints()
-            {
-                Point[] points = new Point[blocks.Count];
-
-                int i = 0;
-                foreach (var block in blocks)
-                    points[i++] = new Point(block.Position);
-
-                return points;
-            }
-        }
-        public struct Point
-        {
-            public int x;
-            public int y;
-
-            public Point(int y, int x) => (this.y, this.x) = (y, x);
-
-            public Point(Vector2 vector)
-            {
-                x = (int)vector.x;
-                y = (int)vector.y;
-            }
-
-            public Point((int y, int x) point) => (y, x) = point;
-
-            public static bool operator == (Point a, Point b)
-            {
-                if (a.y == b.y && a.x == b.x) 
-                    return true;
-                    
-                return false;
-            }
-
-            public static bool operator !=(Point a, Point b)
-            {
-                if (a.y != b.y || a.x != b.x)
-                    return true;
-
-                return false;
-            }
         }
 
         #endregion
@@ -542,6 +373,7 @@ namespace Xolito.Utilities
             Set_Action(null, new Point(currentCell));
         }
 
+        #region Interaction
         private void Set_Action(object args, params Point[] points)
         {
             switch (sprites.GetAction(color, type, spriteIndex))
@@ -554,7 +386,7 @@ namespace Xolito.Utilities
                         if (block.Collider.HasValue)
                             Remove_Collider(new Point(block.Position));
 
-                        Remove_Interactable(block.block);
+                        Remove_Interactable(block);
                     }
 
                     break;
@@ -569,7 +401,7 @@ namespace Xolito.Utilities
 
                         SetUp_Trigger(ref block, "Platform");
 
-                        Remove_Interactable(block.block);
+                        Remove_Interactable(block);
                     }
 
                     break;
@@ -580,7 +412,7 @@ namespace Xolito.Utilities
                     {
                         var block = grid[points[i].y, points[i].x];
 
-                        Remove_Interactable(block.block);
+                        Remove_Interactable(block);
                     }
                     Find_Pairs(points);
                     break;
@@ -611,7 +443,7 @@ namespace Xolito.Utilities
                         if (block.Collider.HasValue)
                             Remove_Collider(new Point(block.Position));
 
-                        Remove_Interactable(block.block);
+                        Remove_Interactable(block);
 
                         FindObjectOfType<LevelController>().AddStartPoint(block.block, block.data.sprite.color);
                         var point = new Point(block.Position);
@@ -626,43 +458,48 @@ namespace Xolito.Utilities
                 default:
                     break;
             }
+        }
 
-            void Remove_Interactable(GameObject obj)
+        void Remove_Interactable(Block block)
+        {
+            InteractableObject interactable;
+            if (block.Collider.HasValue)
             {
-                InteractableObject interactable;
-                if (obj.TryGetComponent(out interactable))
+                if (colliders[block.collider.Value].collider.gameObject.TryGetComponent(out interactable))
                 {
                     Destroy(interactable);
                 }
             }
+        }
 
-            void SetUp_InteractableBlocks(Point[] points, Interaction interaction)
+        void SetUp_InteractableBlocks(Point[] points, Interaction interaction)
+        {
+            for (int i = 0; i < points.Length; i++)
             {
-                for (int i = 0; i < points.Length; i++)
-                {
-                    var block = grid[points[i].y, points[i].x];
+                var block = grid[points[i].y, points[i].x];
 
-                    if (block.Collider.HasValue)
-                        Remove_Collider(new Point(block.Position));
+                if (block.Collider.HasValue)
+                    Remove_Collider(new Point(block.Position));
 
-                    block.block.tag = "Untagged";
-                    SetUp_Trigger(ref block);
+                block.block.tag = "Untagged";
+                SetUp_Trigger(ref block, INTERACTION_LAYER);
 
-                    Add_Interaction(block, interaction);
-                }
-            }
-
-            static void Add_Interaction(Block block, Interaction interaction)
-            {
-                InteractableObject interactable;
-                if (block.block.TryGetComponent(out interactable))
-                {
-                    interactable.Interaction = interaction;
-                }
-                else
-                    block.block.AddComponent<InteractableObject>().Interaction = interaction;
+                Add_Interaction(block, interaction);
             }
         }
+
+        void Add_Interaction(Block block, Interaction interaction)
+        {
+            if (!block.Collider.HasValue) return;
+
+            if (colliders[block.Collider.Value].collider.gameObject.TryGetComponent(out InteractableObject interactable))
+            {
+                interactable.Interaction = interaction;
+            }
+            else
+                colliders[block.Collider.Value].collider.gameObject.AddComponent<InteractableObject>().Interaction = interaction;
+        } 
+        #endregion
 
         private void Fill_Place()
         {
@@ -996,6 +833,14 @@ namespace Xolito.Utilities
 
         }
 
+        void SetUp_Trigger(ref Block block, int layer, string tag = "Untagged")
+        {
+            SetUp_Trigger(ref block, tag);
+
+            if (block.Collider.HasValue)
+                colliders[block.Collider.Value].collider.gameObject.layer = layer;
+        }
+
         void SetUp_Trigger(ref Block block, string tag = "Untagged")
         {
             var data = Create_NewCollider(true, block, block.data.sprite.amount);
@@ -1028,7 +873,7 @@ namespace Xolito.Utilities
         private ColliderData Create_NewCollider(bool? horizontal, Block cur, Vector2Int elementsPerUnit)
         {
             ColliderData col;
-            var data = new ColliderData($"Col{colliders.Count}", cur, horizontal, elementsPerUnit);
+            var data = new ColliderData($"Col{colliders.Count}", cur, horizontal, elementsPerUnit, Destroy);
             bool added = false;
 
             for (int i = 0; i < colliders.Count; i++)
