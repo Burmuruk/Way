@@ -25,7 +25,6 @@ namespace Xolito.Utilities
     public class BlockData
     {
         public SpriteData sprite;
-        public SpriteData backGround;
         public (int y, int x) position;
         public bool? isHorizontal = null;
         public Vector2 colliderSize = default;
@@ -58,11 +57,6 @@ namespace Xolito.Utilities
         {
             sprite = data;
             Type = BlockType.None;
-        }
-
-        public BlockData(SpriteData sprite, SpriteData backGround) : this(sprite)
-        {
-            this.backGround = backGround;
         }
     }
 }

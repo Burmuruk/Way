@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Xolito.Core
@@ -6,6 +7,8 @@ namespace Xolito.Core
     public class InteractableObject : MonoBehaviour
     {
         [SerializeField] Interaction interaction = Interaction.None;
+
+        public event Action OnInteract;
 
         public Interaction Interaction { get => interaction; set => interaction = value; }
 
@@ -48,8 +51,9 @@ namespace Xolito.Core
                 else if (interaction == Interaction.Coin)
                 {
                     level.Add_Coin();
-                    gameObject.SetActive(false);
                 }
+
+                OnInteract?.Invoke();
             }
         }
     }

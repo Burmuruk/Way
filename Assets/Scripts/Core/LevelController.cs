@@ -99,6 +99,7 @@ namespace Xolito.Core
         {
             currentCoins++;
             //coinsCounter.GetComponent<TMPro.TextMeshProUGUI>().text = coins.ToString();
+            print(currentCoins);
         }
     }
 }
