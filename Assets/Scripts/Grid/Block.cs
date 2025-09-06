@@ -1,80 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using Xolito.Core;
 
 namespace Xolito.Utilities
 {
-    internal class Block
+    public class GridBlock
     {
-        public GameObject block;
-        public SpriteRenderer renderer;
-        public BlockData data;
-        public const int MAX_LAYERS = 9;
-        private int? _collider;
-        private List<Block> layers;
+        public const int MAX_LAYERS = 10;
+        public List<SubBlock> blocks;
+        private (int y, int x) position;
 
-        public Block this[int idx]
+        public SubBlock this[int idx]
         {
             get
             {
-                if (idx == 0) return this;
+                if (blocks == null || blocks.Count <= idx)
+                    return null;
 
-                if (layers != null && layers.Count > 0)
-                    return layers[idx - 1];
-
-                return this;
-            }
-        }
-        public Sprite Sprite 
-        {
-            get
-            {
-                if (renderer.sprite != null) return renderer.sprite;
-
-                foreach (var layer in layers)
-                {
-                    if (layer.Sprite != null)
-                        return layer.Sprite;
-                }
-
-                return null;
-            }
-            set => renderer.sprite = value;
-        }
-        public bool? IsHorizontal { get => data.isHorizontal; set => data.isHorizontal = value; }
-        public int? Collider
-        {
-            get
-            {
-                return HasAnyCollider(out _);
+                return blocks[idx];
             }
             set
             {
-                var col = HasAnyCollider(out int curLayer);
-                var newPos = new Vector2
-                {
-                    x = Int32.Parse(block.name.Substring(5, 1)),
-                    y = Int32.Parse(block.name.Substring(5, 1)),
-                };
-
-                if (curLayer == 0)
-                {
-                    _collider = value;
-                    data.colliderPosition = newPos;
-                }
-                else
-                {
-                    layers[curLayer].Collider = value;
-                    layers[curLayer].data.colliderPosition = newPos;
-                }
+                if (blocks != null && blocks.Count > idx)
+                    blocks[idx] = value;
             }
         }
-        public (int y, int x) Position => data.position;
+        public Vector3 Position { get; private set; }
 
-        public static bool operator true(Block block) => block != null;
-        public static bool operator false(Block block) => block == null;
-        public static bool operator !(Block block)
+        public static bool operator true(GridBlock block) => block != null;
+        public static bool operator false(GridBlock block) => block == null;
+        public static bool operator !(GridBlock block)
         {
             if (block != null)
                 return true;
@@ -82,69 +36,93 @@ namespace Xolito.Utilities
                 return false;
         }
 
-        public Block(int row, int column, bool createLayers = true)
+        public GridBlock(int row, int column, Vector3 position, Vector2 spriteSize)
         {
-            block = new GameObject($"Block{row},{column}", typeof(SpriteRenderer));
-            renderer = block.GetComponent<SpriteRenderer>();
-            data = new BlockData((row, column));
+            Position = position;
+            blocks = new();
 
-            if (createLayers)
+            for (int i = 0; i < MAX_LAYERS; i++)
             {
-                layers = new List<Block>(9);
+                var block = new SubBlock(row, column, i);
+                block.Block.transform.position = position;
+                block.Renderer.size = spriteSize;
 
-                for (int i = 0; i < layers.Count; i++)
-                {
-                    layers[i] = new Block(row, column, false);
-                }
+                blocks.Add(block);
             }
         }
 
-        private BlockData Get_Data()
+        public GridBlock()
         {
-            int layerIdx = -1;
-
-            if (renderer.sprite == null)
-            {
-                for (global::System.Int32 i = 0; i < layers.Count; i++)
-                {
-                    if (layers[i].Sprite != null)
-                    {
-                        layerIdx = i;
-                        break;
-                    }
-                }
-            }    
-            else
-            {
-                layerIdx = 0;
-            }
-
-            BlockData curData = layerIdx switch
-            {
-                <= 0 => null,
-                == 0 => data,
-                _ => layers[layerIdx],
-            };
-
-            return curData;
+            blocks = new(MAX_LAYERS);
         }
 
-        public int? HasAnyCollider(out int layer)
+        public (int y, int x) GridPosition => position;
+
+        public int? GetCollider(int layer) => blocks[layer].collider;
+
+        public void SetCollider(int? idx, int layer) => blocks[layer].collider = idx;
+
+        private BlockData Get_Data(int layer) => blocks[layer].data;
+
+        public void SetParent(Transform parent)
+        {
+            foreach (var layer in blocks)
+            {
+                layer.Block.transform.parent = parent;
+            }
+        }
+
+        public bool ContainsBlockType(BlockType type, out int layer)
         {
             layer = 0;
 
-            if (Collider.HasValue) return Collider;
-
-            for (int i = 0; i < layers.Count; i++)
+            foreach (var block in blocks)
             {
-                if (layers[i].Collider.HasValue)
+                if (block.data.Type == type)
                 {
-                    layer = i;
-                    return layers[i].Collider;
+                    layer = block.Layer;
+                    return true;
                 }
             }
 
-            return null;
+            return false;
+        }
+
+        public int? GetSpriteCloserTo(Vector3 position)
+        {
+            var (minDis, idx) = (float.MaxValue, -1);
+
+            foreach (var block in blocks)
+            {
+                float curDis = Vector3.Distance(block.Block.transform.position, position);
+                if (block.Sprite != null && curDis < minDis)
+                {
+                    (minDis, idx) = (curDis, block.Layer);
+                }
+            }
+
+            return idx < 0 ? null : idx;
+        }
+
+        public void Clear(int layer) => blocks[layer].Clear();
+
+        public void Clear() => blocks.ForEach(b => b.Clear());
+
+        public override string ToString()
+        {
+            string str = $"GridBlock: position=({position.y},{position.x})-\n";
+            str += " blocks=";
+            string slicer = "";
+
+            foreach (var block in blocks)
+            {
+                str += slicer;
+                str += block;
+                slicer = ",";
+            }
+
+            str += "\n";
+            return str;
         }
     }
 }

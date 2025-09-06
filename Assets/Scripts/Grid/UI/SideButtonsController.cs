@@ -12,6 +12,9 @@ namespace Assets.Scripts.Grid.UI
         [SerializeField] Image pLayerImg;
         [SerializeField] TextMeshProUGUI pLayerTxt;
         [SerializeField] int layerTime = 500;
+        [SerializeField] TextMeshProUGUI layerBox;
+        Task layerTask;
+        bool shouldHideLayer = false;
 
         private void Awake()
         {
@@ -22,15 +25,33 @@ namespace Assets.Scripts.Grid.UI
 
         private void Show_layer(int layer)
         {
+            if (layerTask != null && layerTask.Status == TaskStatus.Running)
+            {
+                shouldHideLayer = false;
+            }
+            else
+                shouldHideLayer = true;
+
+
             pLayerImg.gameObject.SetActive(true);
             pLayerTxt.text = layer.ToString();
             pLayerImg.CrossFadeAlpha(0, 1, true);
-            Task.Delay(layerTime).GetAwaiter().OnCompleted(() => Disable_LayerImg());
+            layerBox.text = pLayerTxt.text;
+            
+            layerTask = Task.Delay(layerTime);
+            layerTask.GetAwaiter().OnCompleted(() => Disable_LayerImg());
         }
 
         private void Disable_LayerImg()
         {
+            if (!shouldHideLayer)
+            {
+                shouldHideLayer = true;
+                return;
+            }
+
             pLayerImg.gameObject.SetActive(false);
+            pLayerImg.CrossFadeAlpha(1, .05f, true);
         }
 
         public void ToggleVisiblity(GameObject target)

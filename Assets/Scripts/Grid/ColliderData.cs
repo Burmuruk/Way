@@ -4,19 +4,19 @@ using UnityEngine;
 
 namespace Xolito.Utilities
 {
-    internal class ColliderData
+    public class ColliderData
     {
         public GameObject item;
-        public List<Block> blocks;
+        public List<SubBlock> blocks;
         public BoxCollider2D collider;
         public bool? isHorizontal = null;
         public int headIdx = 0;
         private bool isTrigger = false;
         private Action<GameObject> _destructionCallback;
 
-        public Block First => blocks == null || blocks.Count == 0 ? null : blocks[0];
-        public Block Last => blocks == null || blocks.Count == 0 ? null : blocks[blocks.Count - 1];
-        public Block Head => blocks == null || blocks.Count == 0 ? null : blocks[headIdx];
+        public SubBlock First => blocks == null || blocks.Count == 0 ? null : blocks[0];
+        public SubBlock Last => blocks == null || blocks.Count == 0 ? null : blocks[blocks.Count - 1];
+        public SubBlock Head => blocks == null || blocks.Count == 0 ? null : blocks[headIdx];
         public bool IsTrigger
         {
             get => isTrigger;
@@ -35,11 +35,11 @@ namespace Xolito.Utilities
         }
         public Vector2Int ElementsPerUnit { get; set; }
 
-        public ColliderData(string name, Block block, bool? isHorizontal, Vector2Int elementsPerUnit, Action<GameObject> destructionCallback)
+        public ColliderData(string name, SubBlock block, bool? isHorizontal, Vector2Int elementsPerUnit, Action<GameObject> destructionCallback)
         {
             this.item = new GameObject(name, typeof(BoxCollider2D));
             collider = item.GetComponent<BoxCollider2D>();
-            blocks = new List<Block>();
+            blocks = new List<SubBlock>();
             this.isHorizontal = isHorizontal;
             ElementsPerUnit = elementsPerUnit;
             _destructionCallback = destructionCallback;
@@ -47,11 +47,11 @@ namespace Xolito.Utilities
             AddFirst(block);
         }
 
-        public void AddFirst(Block block) => blocks.Insert(0, block);
-        public void AddLast(Block block) => blocks.Insert(blocks.Count, block);
+        public void AddFirst(SubBlock block) => blocks.Insert(0, block);
+        public void AddLast(SubBlock block) => blocks.Insert(blocks.Count, block);
         public void RemoveFirst()
         {
-            blocks[0].Collider = null;
+            blocks[0].collider = null;
             blocks.RemoveAt(0);
         }
         public void RemoveLast()
@@ -59,14 +59,14 @@ namespace Xolito.Utilities
             if (headIdx == blocks.Count - 1)
                 headIdx = blocks.Count - 2;
 
-            blocks[blocks.Count - 1].Collider = null;
+            blocks[blocks.Count - 1].collider = null;
             blocks.RemoveAt(blocks.Count - 1);
         }
 
         public void Clear()
         {
             foreach (var block in blocks)
-                block.Collider = null;
+                block.collider = null;
 
             blocks.Clear();
             _destructionCallback?.Invoke(item);
@@ -78,9 +78,28 @@ namespace Xolito.Utilities
 
             int i = 0;
             foreach (var block in blocks)
-                points[i++] = new Point(block.Position);
+                points[i++] = new Point(block.Position, block.Layer);
 
             return points;
+        }
+
+        public override string ToString()
+        {
+            string str = $"ColliderData: isHorizontal={isHorizontal}- isTrigger={isTrigger}- headIdx={headIdx}-";
+            var pos = item.transform.position;
+            str += $"position={pos.x},{pos.y}-";
+            str += " blocks=";
+            string slicer = "";
+
+            foreach (var block in blocks)
+            {
+                str += slicer;
+                str += block;
+                slicer = ",";
+            }
+
+            str += $"-size={collider.size}\n";
+            return str;
         }
     }
 }

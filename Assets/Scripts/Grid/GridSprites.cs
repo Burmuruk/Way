@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static Xolito.Utilities.GridController;
 
 namespace Xolito.Utilities
 {
@@ -20,7 +19,6 @@ namespace Xolito.Utilities
             if (spritesData == null || applyChanges)
                 Initialize();
 
-            //Le moví aqui
             return spritesData[color][type][index];
         }
 
@@ -34,7 +32,7 @@ namespace Xolito.Utilities
 
         public Vector2Int GetSpriteAmount(ColorType color, BlockType type)
         {
-            if (spritesData == null || applyChanges) 
+            if (spritesData == null || applyChanges)
                 Initialize();
 
             return spritesData[color][type].amount;
@@ -54,12 +52,15 @@ namespace Xolito.Utilities
             return result;
         }
 
-        public Vector2 Get_SpriteOffset(ColorType color, BlockType type, int index)
+        public (int x, int y) Get_SpriteOffset(ColorType color, BlockType type, int index)
         {
             if (spritesData == null || applyChanges)
                 Initialize();
 
-            return spritesData[color][type].amount;
+            if (color == ColorType.None || type == BlockType.None)
+                return (1, 1);
+
+            return (spritesData[color][type].amount.x, spritesData[color][type].amount.y);
         }
 
         private void Initialize()
@@ -69,7 +70,7 @@ namespace Xolito.Utilities
             {
                 blackBlocks,
                 whiteBlocks
-            };            
+            };
             Array blockTypes = Enum.GetValues(typeof(BlockType));
             Array colors = Enum.GetValues(typeof(ColorType));
 
@@ -86,7 +87,7 @@ namespace Xolito.Utilities
                 {
                     SpritesType newList = null;
 
-                    foreach (var data in blockLists[i]) 
+                    foreach (var data in blockLists[i])
                     {
                         if (data.type == (BlockType)blockTypes.GetValue(j))
                         {

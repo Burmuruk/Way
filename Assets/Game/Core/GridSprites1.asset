@@ -86,6 +86,7 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 3c0106e4f7c169945bffeacf28b651e5, type: 3}
     - {fileID: 21300000, guid: b2a1866458d264548bc0d6e1f52391ff, type: 3}
     - {fileID: 21300000, guid: 4213589a748231f4ea15a991a7dc672c, type: 3}
+    - {fileID: 21300000, guid: 4dc4037f8c134924f9092cd7e80312e9, type: 3}
     type: 4
     action: 6
     amount: {x: 0, y: 0}

@@ -29,6 +29,7 @@ namespace Xolito.Utilities
         public bool? isHorizontal = null;
         public Vector2 colliderSize = default;
         public Vector2 colliderPosition = default;
+        public Vector2 spriteOffset = default;
 
         public BlockType Type 
         {
@@ -57,6 +58,11 @@ namespace Xolito.Utilities
         {
             sprite = data;
             Type = BlockType.None;
+        }
+
+        public override string ToString()
+        {
+            return $"BlockData: pos=({position.y},{position.x})- isHorizontal={isHorizontal}\n";
         }
     }
 }

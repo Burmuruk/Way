@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Xolito.Core;
+using static Unity.Collections.AllocatorManager;
 
 namespace Xolito.Utilities
 {
@@ -24,7 +25,12 @@ namespace Xolito.Utilities
         [SerializeField] ColorType color;
         [SerializeField] bool random = false;
         [SerializeField] bool showCursor = true;
-        [SerializeField, Range(0, 9)] int curLayer;
+        [SerializeField, Range(0, 9)] int curLayer = 1;
+
+        [Header("Saving")]
+        [SerializeField] string fileName = "grid";
+        [SerializeField] bool save;
+        [SerializeField] bool load;
 
         LevelController lvlController;
 
@@ -34,10 +40,12 @@ namespace Xolito.Utilities
         (int y, int x) currentCell = default;
         (float x, float y) currentOffset = default;
         (int y, int x, bool hasValue) lastCell = default;
+        int lastLayer = 0;
 
-        Block[,] grid;
+        GridBlock[,] grid;
         List<ColliderData> colliders = new List<ColliderData>();
         GameObject collidersParent;
+        GameObject blocksParent;
         List<(Point point, ColorType color)> startPoints;
         Vector2 blockSize = default;
         Vector2 blockExtends = default;
@@ -81,7 +89,7 @@ namespace Xolito.Utilities
             startPoints = new List<(Point point, ColorType color)>();
 
             Initialize();
-            Get_Sprite();
+            Set_SpriteInMouse();
         }
 
         void Update()
@@ -98,6 +106,21 @@ namespace Xolito.Utilities
 
             Change_Sprite();
             Change_BlockType();
+        }
+
+        private void FixedUpdate()
+        {
+            if (save)
+            {
+                Save();
+                save = false;
+            }
+
+            if (load)
+            {
+                Load();
+                load = false;
+            }
         }
 
         private void Move_Players()
@@ -135,6 +158,20 @@ namespace Xolito.Utilities
 
         #endregion
 
+        #region Saving
+        public void Save()
+        {
+            GridSaver saver = new GridSaver();
+            saver.SaveToTxt(grid, colliders, sprites, "Assets/Data/" + fileName + ".json");
+        }
+
+        public void Load()
+        {
+            GridSaver saver = new GridSaver();
+            (grid, colliders, sprites) = saver.LoadFromTxt("Assets/Data/" + fileName + ".json", Destroy, parents);
+        }
+        #endregion
+
         #region Public methods
         public void RemoveInList(in Point point, int colliderIndex)
         {
@@ -166,7 +203,7 @@ namespace Xolito.Utilities
 
             //Set_PositionToCollider(colliderIndex, blockSlices[0][0]);
             //Set_ColliderSize(colliders[colliderIndex].isHorizontal, colliders[colliderIndex]);
-            
+
             //Point first = blockSlices[1][0];
             //blockSlices[1].RemoveAt(0);
             //bool isAfter = false;
@@ -191,7 +228,7 @@ namespace Xolito.Utilities
                 //Point first = newPoints[0];
                 //newPoints.RemoveAt(0);
                 var col = colliders[index];
-                col.item.transform.position = col.Head.block.transform.position;
+                col.item.transform.position = col.Head.Block.transform.position;
 
                 Set_ColliderSize(col.isHorizontal, col);
 
@@ -209,12 +246,12 @@ namespace Xolito.Utilities
                     {
                         blockSlices.Add(new List<Point>());
                         ++i;
-                        block.Collider = null;
+                        block.collider = null;
                         continue;
                     }
 
-                    blockSlices[i].Add(new Point(block.Position));
-                    block.Collider = null;
+                    blockSlices[i].Add(new Point(block.Position, block.Layer));
+                    block.collider = null;
                 }
 
                 Destroy(colliders[colliderIndex].item);
@@ -224,7 +261,7 @@ namespace Xolito.Utilities
             void Set_PositionToCollider(int colliderIdx, Point point)
             {
                 var col = colliders[colliderIdx];
-                col.item.transform.position = grid[point.y, point.x].block.transform.position;
+                col.item.transform.position = grid[point.y, point.x].Position;
             }
         }
         #endregion
@@ -236,17 +273,23 @@ namespace Xolito.Utilities
         {
             try
             {
-                if (Input.GetKey(KeyCode.N) && Input.GetMouseButton(0))
+                if (Input.GetKey(KeyCode.L) && Input.GetMouseButton(0))
                 {
-                    Draw_Line();
+                    if (Input.GetKey(KeyCode.RightAlt) || Input.GetKey(KeyCode.AltGr))
+                        Draw_Line(null);
+                    else
+                        Draw_Line(curLayer);
                 }
-                else if (Input.GetKey(KeyCode.C) && Input.GetMouseButton(0))
+                else if (Input.GetKey(KeyCode.U) && Input.GetMouseButton(0))
                 {
-                    Fill_Place();
+                    if (Input.GetKey(KeyCode.RightAlt) || Input.GetKey(KeyCode.AltGr))
+                        Fill_Place(null);
+                    else
+                        Fill_Place(curLayer);
                 }
                 else if (Input.GetMouseButtonDown(0))
                 {
-                    Set_Piece();
+                    Set_Piece(currentCell);
                 }
             }
             catch (IndexOutOfRangeException) { }
@@ -254,7 +297,7 @@ namespace Xolito.Utilities
 
         private void Change_BlockType()
         {
-            if (Input.GetKeyDown(KeyCode.J))
+            if (Input.GetKeyDown(KeyCode.J) && !(Input.GetKey(KeyCode.RightAlt) || Input.GetKey(KeyCode.AltGr)))
             {
                 var values = Enum.GetValues(typeof(BlockType));
                 var newValue = (int)type + 1;
@@ -264,9 +307,9 @@ namespace Xolito.Utilities
 
                 type = (BlockType)newValue;
                 elementsPerUnit = sprites.GetSpriteAmount(color, type);
-                Get_Sprite();
+                Set_SpriteInMouse();
             }
-            else if (Input.GetKeyDown(KeyCode.K))
+            else if (Input.GetKeyDown(KeyCode.K) && !(Input.GetKey(KeyCode.RightAlt) || Input.GetKey(KeyCode.AltGr)))
             {
                 var values = Enum.GetValues(typeof(BlockType));
                 var newValue = (int)type - 1;
@@ -276,7 +319,53 @@ namespace Xolito.Utilities
 
                 type = (BlockType)newValue;
                 elementsPerUnit = sprites.GetSpriteAmount(color, type);
-                Get_Sprite();
+                Set_SpriteInMouse();
+            }
+        }
+
+        private void Change_Layer()
+        {
+            if (Input.GetKey(KeyCode.O))
+            {
+                if (curLayer != 0)
+                {
+                    lastLayer = curLayer;
+                    curLayer = 0;
+                    OnLayerChanged?.Invoke(curLayer);
+                }
+                return;
+            }
+            else if (curLayer == 0)
+            {
+                curLayer = lastLayer;
+                OnLayerChanged?.Invoke(curLayer);
+            }
+
+            if (Input.GetKeyDown(KeyCode.K) && (Input.GetKey(KeyCode.RightAlt) || Input.GetKey(KeyCode.AltGr)))
+            {
+                if (curLayer >= GridBlock.MAX_LAYERS - 1)
+                {
+                    curLayer = 1;
+                }
+                else
+                {
+                    ++curLayer;
+                }
+
+                OnLayerChanged?.Invoke(curLayer);
+            }
+            if (Input.GetKeyDown(KeyCode.J) && (Input.GetKey(KeyCode.RightAlt) || Input.GetKey(KeyCode.AltGr)))
+            {
+                if (curLayer <= 1)
+                {
+                    curLayer = GridBlock.MAX_LAYERS - 1;
+                }
+                else
+                {
+                    --curLayer;
+                }
+
+                OnLayerChanged?.Invoke(curLayer);
             }
         }
 
@@ -308,7 +397,7 @@ namespace Xolito.Utilities
                 showCursor = value;
 
                 if (value)
-                    Get_Sprite();
+                    Set_SpriteInMouse();
                 else
                     spriteInMouse.sprite = null;
 
@@ -328,15 +417,18 @@ namespace Xolito.Utilities
                 else
                     color = ColorType.Black;
 
-                Get_Sprite();
+                Set_SpriteInMouse();
             }
 
             if (Input.GetMouseButtonDown(1))
             {
-                Remove_Piece(curLayer);
+                if (!Input.GetKey(KeyCode.RightAlt) && !Input.GetKey(KeyCode.AltGr))
+                    Remove_Piece(curLayer);
+                else
+                    Remove_PieceAt(new Point(currentCell, curLayer));
             }
 
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.U))
             {
                 random = !random;
                 OnRandomEnabled?.Invoke(random);
@@ -344,58 +436,118 @@ namespace Xolito.Utilities
         }
         #endregion
 
-        private void Set_Piece()
+        private void Set_Piece((int y, int x) point)
         {
             if (color == ColorType.None || type == BlockType.None)
             {
-                grid[currentCell.y, currentCell.x][curLayer].Sprite = null;
-                grid[currentCell.y, currentCell.x][curLayer].data.sprite = null;
+                var block = grid[point.y, point.x][curLayer];
+                block.Clear();
+
+                if (block.collider.HasValue)
+                {
+                    Remove_Collider(new Point(block.Position, block.Layer));
+                    Remove_Interactable(block);
+                }
+
                 return;
             }
+            else if (type == BlockType.Ground && grid[point.y, point.x].ContainsBlockType(BlockType.Ground, out var layer))
+                return;
 
-            Block cur = grid[currentCell.y, currentCell.x][curLayer];
-            cur.Sprite = sprites.GetSprite(color, type, spriteIndex);
-            cur.data.sprite = new SpriteData(color, type, elementsPerUnit);
-            cur.block.transform.parent = parents[type].transform;
-            cur.block.transform.position = spriteInMouse.transform.position;
-            cur.data.Type = type;
+            var lastType = grid[point.y, point.x][curLayer].data.Type;
+            if (lastType != BlockType.None && lastType != type)
+                return;
 
-            lastCell = (currentCell.y, currentCell.x, true);
-            Get_Sprite();
+            var curBlock = grid[point.y, point.x][curLayer];
 
-            Set_Action(null, new Point(currentCell));
+            Set_Sprite(curBlock, color, type, elementsPerUnit, spriteIndex);
+
+            lastCell = (point.y, point.x, true);
+            Set_SpriteInMouse();
+
+            Set_Action(new Point(point, curLayer));
+        }
+
+        private void Set_Sprite(SubBlock block, SpriteData data)
+        {
+            Set_Sprite(block, data.color, data.type, data.amount, data.idx);
+        }
+
+        private void Set_Sprite(SubBlock block, ColorType color, BlockType type, Vector2Int amount, int spriteIdx)
+        {
+            block.Sprite = sprites.GetSprite(color, type, spriteIdx);
+            block.data.sprite = new SpriteData(color, type, amount, spriteIdx);
+            block.Block.transform.parent = parents[type].transform;
+            block.data.Type = type;
+            block.Block.transform.position = Get_SpritePosition(block, out var offset);
+            block.data.spriteOffset = offset;
         }
 
         void Remove_Piece(int layer, Point? point = null)
         {
-            var block = grid[currentCell.y, currentCell.x][layer];
+            try
+            {
+                var block = grid[currentCell.y, currentCell.x][layer];
 
-            if (point.HasValue)
-                block = grid[point.Value.y, point.Value.x][layer];
+                if (point.HasValue)
+                    block = grid[point.Value.y, point.Value.x][layer];
+
+                block.Sprite = null;
+                block.data.sprite = new SpriteData(ColorType.None, BlockType.None, elementsPerUnit, -1);
+                block.Block.transform.parent = parents[BlockType.None].transform;
+                Remove_Collider(new Point(block.Position.y, block.Position.x, layer));
+                lastCell.hasValue = false;
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Set_CurrentCell();
+                if (currentCell.y > 0 && currentCell.y < rows && currentCell.x > 0 && currentCell.y < columns)
+                    Remove_Piece(layer, point);
+            }
+        }
+
+        void Remove_PieceAt(Point? point)
+        {
+            int layer = 0;
 
             try
             {
+                var gBlock = grid[currentCell.y, currentCell.x];
+
+                if (gBlock.GetSpriteCloserTo(spriteInMouse.transform.position) is var l && !l.HasValue) return;
+
+                layer = l.Value;
+                var block = gBlock[layer];
+
+                if (point.HasValue)
+                    block = grid[point.Value.y, point.Value.x][layer];
+
                 block.Sprite = null;
-                block.data.sprite = new SpriteData(color, type, elementsPerUnit);
-                block.block.transform.parent = parents[BlockType.None].transform;
-                Remove_Collider(new Point(block.Position.y, block.Position.x));
+                block.data.sprite = new SpriteData(color, BlockType.None, elementsPerUnit, -1);
+                block.Block.transform.parent = parents[BlockType.None].transform;
+                Remove_Collider(new Point(block.Position.y, block.Position.x, layer));
                 lastCell.hasValue = false;
             }
-            catch (IndexOutOfRangeException) { }
+            catch (IndexOutOfRangeException)
+            {
+                Set_CurrentCell();
+                if (currentCell.y > 0 && currentCell.y < rows && currentCell.x > 0 && currentCell.y < columns)
+                    Remove_PieceAt(point);
+            }
         }
 
         #region Interaction
-        private void Set_Action(object args, params Point[] points)
+        private void Set_Action(params Point[] points)
         {
             switch (sprites.GetAction(color, type, spriteIndex))
             {
                 case ActionType.None:
                     for (int i = 0; i < points.Length; i++)
                     {
-                        var block = grid[points[i].y, points[i].x];
+                        var block = grid[points[i].y, points[i].x][points[i].layer];
 
-                        if (block.Collider.HasValue)
-                            Remove_Collider(new Point(block.Position));
+                        if (block.collider.HasValue)
+                            Remove_Collider(new Point(block.Position, block.Layer));
 
                         Remove_Interactable(block);
                     }
@@ -407,10 +559,10 @@ namespace Xolito.Utilities
                     {
                         var block = grid[points[i].y, points[i].x][curLayer];
 
-                        if (block.Collider.HasValue)
-                            Remove_Collider(new Point(block.Position));
+                        if (block.collider.HasValue)
+                            Remove_Collider(block);
 
-                        SetUp_Trigger(ref block, "Platform");
+                        SetUp_Trigger(block, "Platform");
 
                         Remove_Interactable(block);
                     }
@@ -425,17 +577,17 @@ namespace Xolito.Utilities
 
                         Remove_Interactable(block);
                     }
-                    Find_Pairs(points);
+                    Find_Pairs(points, curLayer);
                     break;
 
                 case ActionType.Coin:
 
-                    SetUp_InteractableBlocks(points, Interaction.Coin, out List<(Block block, InteractableObject interact)> interactables);
+                    SetUp_InteractableBlocks(points, Interaction.Coin, out List<(SubBlock block, InteractableObject interact)> interactables);
 
                     foreach (var interactable in interactables)
                     {
                         int layer = curLayer;
-                        interactable.interact.OnInteract += () => Remove_Piece(layer, new Point(interactable.block.Position));
+                        interactable.interact.OnInteract += () => Remove_Piece(layer, new Point(interactable.block.Position, interactable.block.Layer));
                     }
 
                     break;
@@ -457,19 +609,19 @@ namespace Xolito.Utilities
                     {
                         var block = grid[points[i].y, points[i].x][curLayer];
 
-                        if (block.Collider.HasValue)
-                            Remove_Collider(new Point(block.Position));
+                        if (block.collider.HasValue)
+                            Remove_Collider(block);
 
                         Remove_Interactable(block);
 
-                        FindObjectOfType<LevelController>().AddStartPoint(block.block, block.data.sprite.color);
-                        var point = new Point(block.Position);
+                        FindObjectOfType<LevelController>().AddStartPoint(block.Block, block.data.sprite.color);
+                        var point = new Point(block.Position, block.Layer);
 
                         startPoints.Add((point, color));
-                        lvlController.Set_StartPoint(block.block, color == ColorType.White, true);
+                        lvlController.Set_StartPoint(block.Block, color == ColorType.White, true);
                     }
 
-                    Find_Pairs(points);
+                    Find_Pairs(points, curLayer);
                     break;
 
                 default:
@@ -477,19 +629,19 @@ namespace Xolito.Utilities
             }
         }
 
-        void Remove_Interactable(Block block)
+        void Remove_Interactable(SubBlock block)
         {
             InteractableObject interactable;
-            if (block.Collider.HasValue)
+            if (block.collider.HasValue)
             {
-                if (colliders[block.Collider.Value].collider.gameObject.TryGetComponent(out interactable))
+                if (colliders[block.collider.Value].collider.gameObject.TryGetComponent(out interactable))
                 {
                     Destroy(interactable);
                 }
             }
         }
 
-        void SetUp_InteractableBlocks(Point[] points, Interaction interaction, out List<(Block, InteractableObject)> interactables)
+        void SetUp_InteractableBlocks(Point[] points, Interaction interaction, out List<(SubBlock, InteractableObject)> interactables)
         {
             interactables = null;
 
@@ -497,50 +649,52 @@ namespace Xolito.Utilities
             {
                 var block = grid[points[i].y, points[i].x][curLayer];
 
-                if (block.Collider.HasValue)
-                    Remove_Collider(new Point(block.Position));
+                if (block.collider.HasValue)
+                    Remove_Collider(block);
 
-                block.block.tag = "Untagged";
-                SetUp_Trigger(ref block, INTERACTION_LAYER);
+                block.Block.tag = "Untagged";
+                SetUp_Trigger(block, INTERACTION_LAYER);
 
                 Add_Interaction(block, interaction, out var interactable);
-                (interactables??= new List<(Block, InteractableObject)>()).Add((block, interactable));
+                (interactables ??= new List<(SubBlock, InteractableObject)>()).Add((block, interactable));
             }
         }
 
-        void Add_Interaction(Block block, Interaction interaction, out InteractableObject interactable)
+        void Add_Interaction(SubBlock block, Interaction interaction, out InteractableObject interactable)
         {
             interactable = null;
 
-            if (!block.Collider.HasValue) return;
+            if (!block.collider.HasValue) return;
 
-            if (colliders[block.Collider.Value].collider.gameObject.TryGetComponent(out interactable))
+            if (colliders[block.collider.Value].collider.gameObject.TryGetComponent(out interactable))
             {
                 interactable.Interaction = interaction;
             }
             else
             {
-                interactable = colliders[block.Collider.Value].collider.gameObject.AddComponent<InteractableObject>();
+                interactable = colliders[block.collider.Value].collider.gameObject.AddComponent<InteractableObject>();
                 interactable.Interaction = interaction;
             }
-        } 
+        }
         #endregion
 
-        private void Fill_Place()
+        private void Fill_Place(int? layer)
         {
             if (color == ColorType.None || type == BlockType.None)
-            {
-                grid[currentCell.y, currentCell.x][curLayer].Sprite = null;
                 return;
-            }
 
-            if (grid[currentCell.y, currentCell.x][curLayer].Sprite != null) return;
+            var block = grid[currentCell.y, currentCell.x][curLayer];
+            var data = new SpriteData(block.data.sprite.color, block.data.sprite.type, block.data.sprite.amount, block.data.sprite.idx);
 
-            Color_Place(currentCell.x, currentCell.y, null);
+            if (block.data.sprite == new SpriteData(color, type, elementsPerUnit, spriteIndex)) return;
+
+            Color_Place(currentCell.y, currentCell.x, layer, data);
         }
 
-        private void Draw_Line()
+        private void Draw_Line(int? layer)
         {
+            int curLayer = layer.HasValue ? layer.Value : this.curLayer;
+
             if (color == ColorType.None || type == BlockType.None)
             {
                 grid[currentCell.y, currentCell.x][curLayer].Sprite = null;
@@ -591,12 +745,7 @@ namespace Xolito.Utilities
 
                     for (int i = start; i != end;)
                     {
-                        grid[i, lastCell.x].Sprite = spriteInMouse.sprite;
-                        grid[i, lastCell.x].data.sprite = new SpriteData(color, type, elementsPerUnit);
-                        grid[i, lastCell.x].data.Type = type;
-                        Get_Sprite();
-
-                        pointsList.Add(new Point(i, lastCell.x));
+                        Get_LinePoints(i, lastCell.x, layer, ref pointsList);
 
                         if (toUp) ++i;
                         else --i;
@@ -604,7 +753,12 @@ namespace Xolito.Utilities
 
                     int first = 0;
 
-                    Find_Pairs(pointsList.ToArray(), toUp ? Directions.Down : Directions.Up, first);
+                    if (sprites.GetAction(color, type, spriteIndex) == ActionType.Collider)
+                        Find_Pairs(pointsList.ToArray(), layer, toUp ? Directions.Down : Directions.Up, first);
+                    else
+                    {
+                        Draw_Triggers(pointsList);
+                    }
                 }
                 else
                 {
@@ -613,12 +767,7 @@ namespace Xolito.Utilities
 
                     for (int i = start; i != end;)
                     {
-                        grid[lastCell.y, i].Sprite = spriteInMouse.sprite;
-                        grid[lastCell.y, i].data.sprite = new SpriteData(color, type, elementsPerUnit);
-                        grid[lastCell.y, i].data.Type = type;
-                        Get_Sprite();
-
-                        pointsList.Add(new Point(lastCell.y, i));
+                        Get_LinePoints(lastCell.y, i, layer, ref pointsList);
 
                         if (toRitgh) ++i;
                         else --i;
@@ -626,28 +775,70 @@ namespace Xolito.Utilities
 
                     int first = 0;
 
-                    Find_Pairs(pointsList.ToArray(), toRitgh ? Directions.Left : Directions.Right, first);
+                    if (sprites.GetAction(color, type, spriteIndex) == ActionType.Collider)
+                        Find_Pairs(pointsList.ToArray(), layer, toRitgh ? Directions.Left : Directions.Right, first);
+                    else
+                    {
+                        Draw_Triggers(pointsList);
+                    }
                 }
 
                 lastCell = (currentCell.y, currentCell.x, true);
             }
         }
 
-        private void Remove_Collider(in Point blockInd)
+        private void Draw_Triggers(List<Point> points)
         {
-            ref var block = ref grid[blockInd.y, blockInd.x];
+            var data = new SpriteData(color, type, elementsPerUnit, spriteIndex);
 
-            ReportPieceDeletion(in blockInd);
+            foreach (var point in points)
+            {
+                (int y, int x, int l) = point;
+                Set_Sprite(grid[y, x][l], data);
+            }
 
-            if (!block.Collider.HasValue) return;
+            Set_Action(points.ToArray());
+        }
 
-            if (colliders[block.Collider.Value].blocks.Count > 1)
-                RemoveInList(blockInd, block.Collider.Value);
+        private void Get_LinePoints(int y, int x, int? layer, ref List<Point> pointsList)
+        {
+            int curLayer = layer.HasValue ? layer.Value : this.curLayer;
+
+            if (grid[y, x].ContainsBlockType(type, out var newLayer))
+            {
+                if (layer.HasValue && newLayer != layer)
+                {
+                    Remove_Piece(newLayer, new Point(y, x, newLayer));
+                }
+                else if (!layer.HasValue)
+                    curLayer = newLayer;
+            }
+
+            var block = grid[y, x][curLayer];
+            Set_Sprite(block, color, type, elementsPerUnit, spriteIndex);
+
+            Set_SpriteInMouse();
+
+            pointsList.Add(new Point(y, x, curLayer));
+        }
+
+        private void Remove_Collider(SubBlock block) => Remove_Collider(new Point(block.Position, block.Layer));
+
+        private void Remove_Collider(in Point blockIdx)
+        {
+            var block = grid[blockIdx.y, blockIdx.x][blockIdx.layer];
+
+            ReportPieceDeletion(in blockIdx);
+
+            if (!block.collider.HasValue) return;
+
+            if (colliders[block.collider.Value].blocks.Count > 1)
+                RemoveInList(blockIdx, block.collider.Value);
             else
             {
-                Destroy(colliders[block.Collider.Value].item);
-                colliders[block.Collider.Value] = null;
-                block.Collider = null;
+                Destroy(colliders[block.collider.Value].item);
+                colliders[block.collider.Value] = null;
+                block.collider = null;
             }
         }
 
@@ -659,7 +850,7 @@ namespace Xolito.Utilities
             {
                 if (point.point == startPoint)
                 {
-                    var go = grid[startPoint.y, startPoint.x][curLayer].block;
+                    var go = grid[startPoint.y, startPoint.x][curLayer].Block;
 
                     lvlController.Set_StartPoint(go, point.color == ColorType.White, false);
                     startPoints.RemoveAt(i);
@@ -670,35 +861,98 @@ namespace Xolito.Utilities
             }
         }
 
-        private void Color_Place(int y, int x, int? pd)
+        private void Color_Place(int y, int x, in int? layer, in SpriteData data)
         {
-            if (grid[y, x][curLayer].Sprite != null) return;
-
-            grid[y, x][curLayer].Sprite = spriteInMouse.sprite;
-            grid[y, x][curLayer].data.sprite = new SpriteData(color, type, elementsPerUnit);
-            Get_Sprite();
-
             var directions = new[]
             {
-                new { X = -1, Y = 0, Limit = 0 },
+                new { X = -1, Y = 0, Limit = -1 },
                 new { X = 1, Y = 0, Limit = columns },
-                new { X = 0, Y = -1, Limit = 0 },
+                new { X = 0, Y = -1, Limit = -1 },
                 new { X = 0, Y = 1, Limit = rows },
             };
-            int j = x, k = y;
 
-            for (int i = 0; i < directions.Length; i++)
+            List<SubBlock> filled = new();
+            LinkedList<(SubBlock block, int idx)> checkedBlocks = new();
+            int index = 0;
+
+            do
             {
-                if (i == pd) continue;
+            BlockCheck:
+                SubBlock block = null;
+                index = 0;
 
-                if (k + directions[i].Y == directions[i].Limit || j + directions[i].X == directions[i].Limit)
-                    continue;
+                if (Verify_Block(grid[y, x], in layer, in data, out block))
+                {
+                    checkedBlocks.AddLast((block, 0));
+                    filled.Add(block);
+                }
+                else if (checkedBlocks.Count > 0)
+                {
+                    index = checkedBlocks.Last.Value.idx;
+                    (y, x) = checkedBlocks.Last.Value.block.Position;
+                }
+                else
+                    return;
 
-                Color_Place(k + directions[i].Y, j + directions[i].X, i);
+                for (int i = index; i < directions.Length; i++)
+                {
+                    var lastValue = checkedBlocks.Last.Value;
+                    checkedBlocks.Last.Value = (lastValue.block, i + 1);
+
+                    Vector2Int newPos = new(x + directions[i].X, y + directions[i].Y);
+
+                    if (newPos.y == directions[i].Limit || newPos.x == directions[i].Limit)
+                        continue;
+
+                    (y, x) = (newPos.y, newPos.x);
+                    goto BlockCheck;
+                }
+
+                checkedBlocks.RemoveLast();
+
+                if (checkedBlocks.Count > 0)
+                    (y, x) = checkedBlocks.Last.Value.block.Position;
+
+            } while (checkedBlocks.Count > 0);
+
+            foreach (var subBlock in filled)
+            {
+                Set_Sprite(subBlock, new SpriteData(color, type, elementsPerUnit, Get_RandomSpriteIdx(color, type)));
             }
         }
 
-        private void Find_Pairs(Point[] points, Directions direction = Directions.All, int firstIdx = 0)
+        private bool Verify_Block(GridBlock gBlock, in int? layer, in SpriteData data, out SubBlock block)
+        {
+            block = null;
+            if (layer.HasValue)
+            {
+                if (gBlock[layer.Value].data.sprite != data) return false;
+
+                block = gBlock[layer.Value];
+                Fill_Block(block, new Point(block.Position, layer.Value));
+            }
+            else
+            {
+                if (gBlock.ContainsBlockType(data.type, out int idx)
+                    && gBlock[idx].data.sprite == data)
+                {
+                    block = gBlock[idx];
+                    Fill_Block(block, new Point(block.Position, idx));
+                }
+                else
+                    return false;
+            }
+
+            return true;
+        }
+
+        private void Fill_Block(SubBlock block, Point position)
+        {
+            Remove_Piece(position.layer, position);
+            Set_Sprite(block, new SpriteData(color, type, elementsPerUnit, spriteIndex));
+        }
+
+        private void Find_Pairs(Point[] points, int? layer, Directions direction = Directions.All, int firstIdx = 0)
         {
             if (type == BlockType.Platform || type == BlockType.Enemies || points == null) return;
 
@@ -711,20 +965,20 @@ namespace Xolito.Utilities
                 new { X = 0, Y = 1, isH = false, Limit = rows, Direction = Directions.Up},
             };
             bool founded = false;
-            List< (bool isH, bool isAfter, Point first, Point[] points)> pointsData = new List<(bool isH, bool isAfter, Point first, Point[] points)>();
+            List<(bool isH, bool isAfter, Point first, Point[] points)> pointsData = new List<(bool isH, bool isAfter, Point first, Point[] points)>();
 
-            Find_Colliders(ref firstP, pointsData);
+            Find_Colliders(ref firstP, pointsData, layer.HasValue);
 
             if (founded)
             {
                 foreach (var data in pointsData)
                 {
-                    SetUp_Collider(data.isH, data.isAfter, data.first, data.points); 
+                    SetUp_Collider(data.isH, data.isAfter, data.first, data.points);
                 }
             }
             else
             {
-                if (points.Length -1 > 1)
+                if (points.Length - 1 > 0)
                 {
                     Point[] lastBlocks = new Point[points.Length - 1];
 
@@ -741,13 +995,13 @@ namespace Xolito.Utilities
                         isH = true;
 
                     bool isAfter = direction.HasFlag(Directions.Right) || direction.HasFlag(Directions.Up) ? true : false;
-                    SetUp_Collider(isH, isAfter, firstP, lastBlocks); 
+                    SetUp_Collider(isH, isAfter, firstP, lastBlocks);
                 }
                 else
                     SetUp_Collider(null, true, firstP);
             }
 
-            void Find_Colliders(ref Point firstP, List<(bool isH, bool, Point, Point[])> pointsData)
+            void Find_Colliders(ref Point firstP, List<(bool isH, bool, Point, Point[])> pointsData, bool ignoreLayer)
             {
                 for (int dirIdx = 0; dirIdx < directions.Length; dirIdx++)
                 {
@@ -757,14 +1011,25 @@ namespace Xolito.Utilities
                         continue;
 
                     ref var dir = ref directions[dirIdx];
-                    ref var cur = ref grid[firstP.y + dir.Y, firstP.x + dir.X];
+                    var newPoint = new Point(firstP.y + dir.Y, firstP.x + dir.X, firstP.layer);
+                    ref var curGBlock = ref grid[newPoint.y, newPoint.x];
 
-                    if (cur.Sprite && cur.data.sprite.type == BlockType.Ground)
+                    if (curGBlock.ContainsBlockType(type, out var idx) && curGBlock[idx].Sprite)
                     {
-                        if (cur.HasAnyCollider(out int layer).HasValue && (cur.data.isHorizontal.HasValue && cur.data.isHorizontal != dir.isH))
+                        SubBlock curBlock = curGBlock[idx];
+
+                        if (ignoreLayer && firstP.layer != idx)
+                        {
+                            Set_Sprite(curGBlock[firstP.layer], curGBlock[idx].data.sprite);
+                            Remove_Piece(idx, newPoint);
+                        }
+                        else
+                            newPoint = new Point(newPoint.y, newPoint.x, idx);
+
+                        if (curBlock.collider.HasValue && (curBlock.data.isHorizontal.HasValue && curBlock.data.isHorizontal != dir.isH))
                             continue;
 
-                        if (cur.Collider.HasValue && (colliders[cur.Collider.Value].IsTrigger || colliders[cur.Collider.Value].IsTrigger))
+                        if (curBlock.collider.HasValue && (colliders[curBlock.collider.Value].IsTrigger || colliders[curBlock.collider.Value].IsTrigger))
                             continue;
 
                         switch (dirIdx)
@@ -774,12 +1039,11 @@ namespace Xolito.Utilities
 
                                 if (founded && Check_IsAfter(directions[dirIdx]))
                                 {
-                                    var newPoint = new Point(firstP.y + dir.Y, firstP.x + dir.X);
-                                    var blockPoints = colliders[ grid[newPoint.y, newPoint.x].Collider.Value ].GetPoints();
+                                    var blockPoints = colliders[curBlock.collider.Value].GetPoints();
                                     pointsData.Add((true, false, firstP, blockPoints));
                                 }
                                 else if (!founded)
-                                    pointsData.Add((true, Check_IsAfter(directions[dirIdx]), new Point(firstP.y + dir.Y, firstP.x + dir.X), points));
+                                    pointsData.Add((true, Check_IsAfter(directions[dirIdx]), newPoint, points));
                                 goto default;
 
                             case 2:
@@ -787,12 +1051,11 @@ namespace Xolito.Utilities
 
                                 if (founded && Check_IsAfter(directions[dirIdx]))
                                 {
-                                    var newPoint = new Point(firstP.y + dir.Y, firstP.x + dir.X);
-                                    var blockPoints = colliders[grid[newPoint.y, newPoint.x].Collider.Value].GetPoints();
+                                    var blockPoints = colliders[curBlock.collider.Value].GetPoints();
                                     pointsData.Add((false, false, firstP, blockPoints));
                                 }
                                 else if (!founded)
-                                    pointsData.Add((false, Check_IsAfter(directions[dirIdx]), new Point(firstP.y + dir.Y, firstP.x + dir.X), points));
+                                    pointsData.Add((false, Check_IsAfter(directions[dirIdx]), newPoint, points));
                                 goto default;
 
                             default:
@@ -814,37 +1077,37 @@ namespace Xolito.Utilities
             if (points == null) points = new Point[0];
 
             ColliderData col = null;
-            ref var cur = ref grid[first.y, first.x];
+            var firstBlock = grid[first.y, first.x][first.layer];
 
-            if (!cur.Collider.HasValue)
+            if (!firstBlock.collider.HasValue)
             {
-                var data = cur.data.sprite;
-                col = Create_NewCollider(horizontal, cur, data.amount);
+                var amount = firstBlock.data.sprite != null ? firstBlock.data.sprite.amount : Vector2Int.zero;
+                col = Create_NewCollider(horizontal, firstBlock, amount);
             }
             else
-                col = colliders[cur.Collider.Value];
+                col = colliders[firstBlock.collider.Value];
 
-            cur.IsHorizontal = horizontal;
+            firstBlock.IsHorizontal = horizontal;
 
             if (atRight)
             {
                 //InvertArrayOrder(ref blockSlices);
-                
+
                 if (points.Length > 0)
                     if (!horizontal.HasValue)
                     {
-                        col.item.transform.position = grid[points[0].y, points[0].x].block.transform.position;
+                        col.item.transform.position = grid[points[0].y, points[0].x].Position;
                         col.headIdx = 0;
                     }
                     else
                     {
-                        var end = points.Length- 1;
-                        col.item.transform.position = grid[points[end].y, points[end].x].block.transform.position;
+                        var end = points.Length - 1;
+                        col.item.transform.position = grid[points[end].y, points[end].x].Position;
                         col.headIdx = end;
                     }
                 else
                 {
-                    col.item.transform.position = grid[first.y, first.x].block.transform.position;
+                    col.item.transform.position = grid[first.y, first.x].Position;
                     col.headIdx = 0;
                 }
             }
@@ -853,39 +1116,50 @@ namespace Xolito.Utilities
             //else
             //    col.item.transform.position = cur.block.transform.position;
 
-            Set_BlocksCollider(ref cur, col, atRight, points);
+            Set_BlocksCollider(firstBlock, col, atRight, points);
             Set_ColliderSize(horizontal, col);
 
         }
 
-        void SetUp_Trigger(ref Block block, int layer, string tag = "Untagged")
+        void SetUp_Trigger(SubBlock block, int unityLayer, string tag = "Untagged")
         {
-            SetUp_Trigger(ref block, tag);
+            SetUp_Trigger(block, tag);
 
-            if (block.Collider.HasValue)
-                colliders[block.Collider.Value].collider.gameObject.layer = layer;
+            if (block.collider.HasValue)
+                colliders[block.collider.Value].collider.gameObject.layer = unityLayer;
         }
 
-        void SetUp_Trigger(ref Block block, string tag = "Untagged")
+        void SetUp_Trigger(SubBlock block, string tag = "Untagged")
         {
             var data = Create_NewCollider(true, block, block.data.sprite.amount);
             data.IsTrigger = true;
             data.Tag = tag;
 
-            Set_BlocksCollider(ref block, data, true);
+            Set_BlocksCollider(block, data, true);
             Set_ColliderSize(true, data);
         }
 
-        private void Set_BlocksCollider(ref Block cur, ColliderData data, bool atRight, params Point[] points)
+        private void Set_BlocksCollider(SubBlock cur, ColliderData data, bool atRight, params Point[] points)
         {
             foreach (var point in points)
             {
-                ref var block = ref grid[point.y, point.x];
+                ref var gBlock = ref grid[point.y, point.x];
+                SubBlock block = null;
 
-                if (block.Collider.HasValue)
-                    Remove_Collider(point);
+                if (gBlock.ContainsBlockType(BlockType.Ground, out var layer))
+                {
+                    Remove_Collider(gBlock[layer]);
+                    block = gBlock[layer];
+                }
+                else
+                {
+                    block = gBlock[cur.Layer];
 
-                block.Collider = cur.Collider.Value;
+                    if (block.collider.HasValue)
+                        Remove_Collider(block);
+                }
+
+                block.collider = cur.collider.Value;
                 block.data.isHorizontal = cur.data.isHorizontal;
 
                 if (!atRight)
@@ -895,10 +1169,11 @@ namespace Xolito.Utilities
             }
         }
 
-        private ColliderData Create_NewCollider(bool? horizontal, Block cur, Vector2Int elementsPerUnit)
+        private ColliderData Create_NewCollider(bool? horizontal, SubBlock block, Vector2Int elementsPerUnit)
         {
+            var curBlock = block;
             ColliderData col;
-            var data = new ColliderData($"Col{colliders.Count}", cur, horizontal, elementsPerUnit, Destroy);
+            var data = new ColliderData($"Col{colliders.Count}", block, horizontal, elementsPerUnit, Destroy);
             bool added = false;
 
             for (int i = 0; i < colliders.Count; i++)
@@ -906,7 +1181,7 @@ namespace Xolito.Utilities
                 if (colliders[i] == null)
                 {
                     colliders[i] = data;
-                    cur.Collider = i;
+                    curBlock.collider = i;
                     added = true;
                     break;
                 }
@@ -915,14 +1190,14 @@ namespace Xolito.Utilities
             if (!added)
             {
                 colliders.Add(data);
-                cur.Collider = colliders.Count - 1;
+                curBlock.collider = colliders.Count - 1;
             }
 
-            cur.data.isHorizontal = horizontal;
-            col = colliders[cur.Collider.Value];
+            curBlock.data.isHorizontal = horizontal;
+            col = colliders[curBlock.collider.Value];
 
             col.collider.transform.parent = collidersParent.transform;
-            col.item.transform.position = cur.block.transform.position;
+            col.item.transform.position = curBlock.Block.transform.position;
             return col;
         }
 
@@ -957,40 +1232,9 @@ namespace Xolito.Utilities
             }
         }
 
-        private void Change_Layer()
-        {
-            if (Input.GetKeyDown(KeyCode.Comma))
-            {
-                if (curLayer == Block.MAX_LAYERS)
-                {
-                    curLayer = 0;
-                }
-                else
-                {
-                    ++curLayer;
-                }
-
-                OnLayerChanged?.Invoke(curLayer);
-            }
-            else if (Input.GetKeyDown(KeyCode.Minus))
-            {
-                if (curLayer == 0)
-                {
-                    curLayer = Block.MAX_LAYERS;
-                }
-                else
-                {
-                    --curLayer;
-                }
-
-                OnLayerChanged?.Invoke(curLayer);
-            }
-        }
-
         private void Show_Cursor()
         {
-            var countX = sprites.Get_SpriteOffset(color, type, spriteIndex).x;
-            var countY = sprites.Get_SpriteOffset(color, type, spriteIndex).y;
+            var (countX, countY) = sprites.Get_SpriteOffset(color, type, spriteIndex);
             var (x, y) = (blockSize.x / (countX > 0 ? countX : 1), blockSize.y / (countY > 0 ? countY : 1));
 
             (int x, int y) cellPos = ((int)(Input.mousePosition.x / x), (int)(Input.mousePosition.y / y));
@@ -1001,7 +1245,7 @@ namespace Xolito.Utilities
                 y = y * cellPos.y + y / 2,
             });
 
-            currentCell = ((int)(Input.mousePosition.y / blockSize.y), (int)(Input.mousePosition.x / blockSize.x));
+            Set_CurrentCell();
 
             spriteInMouse.transform.position = new Vector3
             {
@@ -1010,6 +1254,36 @@ namespace Xolito.Utilities
                 z = 0
             };
         }
+
+        private Vector3 Get_SpritePosition(SubBlock block, out Vector2Int offset)
+        {
+            var gridPosition = new Vector2(block.Position.x, block.Position.y);
+            var (countX, countY) = sprites.Get_SpriteOffset(block.data.sprite.color, block.data.sprite.type, block.data.sprite.idx);
+            Vector2Int amount = new(countX > 0 ? countX : 1, countY > 0 ? countY : 1);
+            var (sizeX, sizeY) = (blockSize.x / amount.x, blockSize.y / amount.y);
+
+            Vector2Int pos = new ((int)(Input.mousePosition.x / blockSize.x), (int)(Input.mousePosition.y / blockSize.y));
+            Vector2Int PosOffset = new ((int)(Input.mousePosition.x / sizeX), (int)(Input.mousePosition.y / sizeY));
+            offset = new (PosOffset.x - (pos.x * amount.x), PosOffset.y - (pos.y * amount.y));
+
+            var position = Camera.main.ScreenToWorldPoint(new Vector2
+            {
+                x = sizeX * ((gridPosition.x * amount.x) + offset.x) + sizeX / 2,
+                y = sizeY * ((gridPosition.y * amount.y) + offset.y) + sizeY / 2,
+            });
+
+            Set_CurrentCell();
+
+            return new Vector3
+            {
+                x = position.x,
+                y = position.y,
+                z = 0
+            };
+        }
+
+        private void Set_CurrentCell() =>
+            currentCell = ((int)(Input.mousePosition.y / blockSize.y), (int)(Input.mousePosition.x / blockSize.x));
 
         private void Get_NextSprite(bool isForward)
         {
@@ -1050,18 +1324,22 @@ namespace Xolito.Utilities
 
             collidersParent = new GameObject("Colliders");
             collidersParent.transform.parent = transform;
+            blocksParent = new GameObject("Blocks");
+            blocksParent.transform.parent = transform;
 
-            grid = new Block[rows, columns];
+            curLayer = 1;
+            lastLayer = curLayer;
+            grid = new GridBlock[rows, columns];
 
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < columns; j++)
                 {
-                    grid[i, j] = new Block(i, j);
-                    grid[i, j].block.transform.parent = parents[BlockType.None].transform;
+                    var pos = ScreenToWorldPoint((i, j));
+                    var size = spriteInMouse.size;
 
-                    grid[i, j].block.transform.position = ScreenToWorldPoint((i, j));
-                    grid[i, j].renderer.size = spriteInMouse.size;
+                    grid[i, j] = new GridBlock(i, j, pos, size);
+                    grid[i, j].SetParent(parents[BlockType.None].transform);
                 }
             }
         }
@@ -1082,7 +1360,7 @@ namespace Xolito.Utilities
             };
         }
 
-        private void Get_Sprite()
+        private void Set_SpriteInMouse()
         {
             if (color == ColorType.None || type == BlockType.None)
             {
@@ -1106,6 +1384,12 @@ namespace Xolito.Utilities
             }
         }
 
+        private int Get_RandomSpriteIdx(ColorType color, BlockType type)
+        {
+            var rand = new System.Random();
+            return rand.Next(sprites.Get_SpritesCount(color, type));
+        }
+
         private void Draw_Grid()
         {
             if (drawLines)
@@ -1122,7 +1406,7 @@ namespace Xolito.Utilities
                         Camera.main.ScreenToWorldPoint(new Vector3(blockSize.x * i, Camera.main.pixelHeight, 58f)), Color.red);
                 }
             }
-        } 
+        }
         #endregion
-    } 
+    }
 }
