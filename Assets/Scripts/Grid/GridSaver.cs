@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using System.Linq;
+using Xolito.Core;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -130,27 +132,49 @@ namespace Xolito.Utilities
         }
 
         private Vector3 ScreenToWorldPoint(SubBlock block, int columns, int rows, GridSprites sprites)
-        {
-            (int y, int x) point = block.Position;
-            var blockSize = new Vector2(Camera.main.pixelWidth / columns, Camera.main.pixelHeight / rows);
-            var blockExtends = new Vector2(blockSize.x / 2, blockSize.y / 2);
-            var (countX, countY) = sprites.Get_SpriteOffset(block.data.sprite.color, block.data.sprite.type, block.data.sprite.idx);
-            Vector2Int amount = new(countX > 0 ? countX : 1, countY > 0 ? countY : 1);
-            var (sizeX, sizeY) = (blockSize.x / amount.x, blockSize.y / amount.y);
+{
+    // Posición de cuadrícula (asegúrate que sea x,y en ese orden)
+    int gridX = block.Position.x;
+    int gridY = block.Position.y;
 
-            Vector3 newPosition = Camera.main.ScreenToWorldPoint(new Vector2
-            {
-                x = sizeX * ((point.x * amount.x) + block.data.spriteOffset.x) + blockExtends.x,
-                y = sizeY * ((point.y * amount.y) + block.data.spriteOffset.y) + blockExtends.y,
-            });
+    // Tamaño del bloque de la grilla en píxeles
+    var blockSize = new Vector2(
+        (float)Camera.main.pixelWidth / columns,
+        (float)Camera.main.pixelHeight / rows
+    );
 
-            return new Vector3
-            {
-                x = newPosition.x,
-                y = newPosition.y,
-                z = 0
-            };
-        }
+    // Cantidad de subdivisiones que ocupa el sprite
+    var (countX, countY) = sprites.Get_SpriteOffset(
+        block.data.sprite.color, block.data.sprite.type, block.data.sprite.idx
+    );
+    Vector2Int amount = new(
+        countX > 0 ? countX : 1,
+        countY > 0 ? countY : 1
+    );
+
+    // Tamaño de cada subcelda
+    float sizeX = blockSize.x / amount.x;
+    float sizeY = blockSize.y / amount.y;
+
+    // IMPORTANTE: usar la mitad de la subcelda, no del bloque completo
+    var subCellHalf = new Vector2(sizeX * 0.5f, sizeY * 0.5f);
+
+    // Offset discreto del sprite dentro del bloque (asumo que ya lo traes entero)
+    int offX = (int)block.data.spriteOffset.x;
+    int offY = (int)block.data.spriteOffset.y;
+
+    // Coordenadas de pantalla (en píxeles)
+    var screen = new Vector2(
+        sizeX * ((gridX * amount.x) + offX) + subCellHalf.x,
+        sizeY * ((gridY * amount.y) + offY) + subCellHalf.y
+    );
+
+    // A mundo
+    var world = Camera.main.ScreenToWorldPoint(new Vector3(screen.x, screen.y, 0f));
+    world.z = 0f;
+    return world;
+}
+
 
         private static string ToFullPath(string relativePathInAssets)
         {
@@ -230,7 +254,8 @@ namespace Xolito.Utilities
         public bool? isHorizontal;
         public int headIdx;
         public string name;
-        public string tag;
+        public int uLayer;
+        public int interaction;
 
         public ColliderDataDTO From(ColliderData cd)
         {
@@ -245,8 +270,16 @@ namespace Xolito.Utilities
                 isHorizontal = cd.isHorizontal,
                 headIdx = cd.headIdx,
                 name = cd.item.name,
-                tag = cd.Tag
+                uLayer = cd.collider.gameObject.layer,
+                
             };
+            if (cd.collider.TryGetComponent<InteractableObject>(out var io))
+            {
+                dto.interaction = (int)io.Interaction;
+            }
+            else
+                dto.interaction = 0;
+
             return dto;
         }
 
@@ -259,9 +292,14 @@ namespace Xolito.Utilities
             cd.collider.size = size;
             cd.collider.transform.position = position;
             cd.collider.isTrigger = isTrigger;
-            cd.Tag = tag;
+            cd.collider.gameObject.layer = uLayer;
             cd.blocks = blocks.Select(b => grid[b.y, b.x][b.z]).ToList();
             cd.collider.offset = offset;
+            if (interaction != 0)
+            {
+                var io = cd.collider.gameObject.AddComponent<InteractableObject>();
+                io.Interaction = (Interaction)interaction;
+            }
             return cd;
         }
 

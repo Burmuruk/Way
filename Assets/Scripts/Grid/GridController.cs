@@ -123,6 +123,12 @@ namespace Xolito.Utilities
             }
         }
 
+        private void OnDestroy()
+        {
+            GridSaver saver = new GridSaver();
+            saver.SaveToTxt(grid, colliders, sprites, "Assets/Data/" + "Autosave" + ".json");
+        }
+
         private void Move_Players()
         {
             if (Input.GetKeyUp(KeyCode.Alpha4))
