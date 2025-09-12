@@ -306,10 +306,19 @@ namespace Xolito.Utilities
             if (Input.GetKeyDown(KeyCode.J) && !(Input.GetKey(KeyCode.RightAlt) || Input.GetKey(KeyCode.AltGr)))
             {
                 var values = Enum.GetValues(typeof(BlockType));
-                var newValue = (int)type + 1;
+                var newValue = 0;
+                int curIdx = (int)type;
 
-                if (newValue > (int)values.GetValue(values.Length - 1))
-                    newValue = 1;
+                
+                do {
+                    newValue = curIdx + 1;
+
+                    if (newValue > (int)values.GetValue(values.Length - 1))
+                        newValue = 1;
+
+                    curIdx = newValue;
+
+                } while (!sprites.ContainsBlockType(color, (BlockType)newValue));
 
                 type = (BlockType)newValue;
                 elementsPerUnit = sprites.GetSpriteAmount(color, type);
@@ -318,10 +327,18 @@ namespace Xolito.Utilities
             else if (Input.GetKeyDown(KeyCode.K) && !(Input.GetKey(KeyCode.RightAlt) || Input.GetKey(KeyCode.AltGr)))
             {
                 var values = Enum.GetValues(typeof(BlockType));
-                var newValue = (int)type - 1;
+                int newValue = 0;
+                int curIdx = (int)type;
 
-                if (newValue < (int)values.GetValue(1))
-                    newValue = values.Length - 1;
+                do {
+                    newValue = curIdx - 1;
+
+                    if (newValue < (int)values.GetValue(1))
+                        newValue = values.Length - 1;
+
+                    curIdx = newValue;
+
+                } while (!sprites.ContainsBlockType(color, (BlockType)newValue));
 
                 type = (BlockType)newValue;
                 elementsPerUnit = sprites.GetSpriteAmount(color, type);
@@ -628,6 +645,19 @@ namespace Xolito.Utilities
                     }
 
                     Find_Pairs(points, curLayer);
+                    break;
+
+                case ActionType.JumpPad:
+
+                    SetUp_InteractableBlocks(points, Interaction.JumpPad, out _);
+
+                    break;
+                case ActionType.Checkpoint:
+
+                    SetUp_InteractableBlocks(points, Interaction.Checkpoint, out _);
+                    var (x, y) = (points[0].x, points[0].y);
+                    colliders[grid[y, x][curLayer].collider.Value].collider.isTrigger = false;
+
                     break;
 
                 default:

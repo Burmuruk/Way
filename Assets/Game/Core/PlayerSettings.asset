@@ -17,6 +17,7 @@ MonoBehaviour:
   gravity: 3
   speed: 2.5
   jumpForce: 5
+  jumpPadForce: 7
   jumpCoolDown: 1
   groundDistance: 1.93
   groundSize: 2
@@ -24,6 +25,7 @@ MonoBehaviour:
   wallDistance: 0.46
   wallSize: 1
   jumpSize: 0.1
+  jumpPadSize: 0.1
   dashOffset: 0.1
   dashDistance: 2
   dashSpeed: 10

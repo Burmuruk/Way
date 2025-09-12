@@ -31,11 +31,13 @@ namespace Xolito.Utilities
         Platform,
         Ground,
         Corner,
-        Special,
+        SpawnPoint,
         Final,
         Enemies,
         Background,
-        Collectables
+        Collectables,
+        JumpPad,
+        CheckPoint
     }
 
     public enum ActionType
@@ -46,7 +48,9 @@ namespace Xolito.Utilities
         Coin,
         Enemy,
         FinalPoint,
-        StartPoint
+        StartPoint,
+        JumpPad,
+        Checkpoint
     }
 
     public enum Offset

@@ -110,7 +110,7 @@ namespace Xolito.Movement
 
             return false;
         }
-
+      
         public bool InteractWithDash()
         {
             if (inDash || !canDash || !cdDash.CanUse) return false;
@@ -352,6 +352,8 @@ namespace Xolito.Movement
         }
 
         private void Jump() => rgb2d.velocity = new Vector2(rgb2d.velocity.x, pSettings.JumpForce);
+
+        public void JumpPad() => rgb2d.velocity = new Vector2(rgb2d.velocity.x, pSettings.JumpPadForce);
 
         private void Clear_XVelocity() => rgb2d.velocity = new Vector2(0, rgb2d.velocity.y);
 

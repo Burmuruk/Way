@@ -16847,6 +16847,10 @@ PrefabInstance:
       propertyPath: isGrounded
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1679595078360445654, guid: b955493437f2d2f4db7e7a5d6516af3f, type: 3}
+      propertyPath: isGrounded
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2132499120838741904, guid: b955493437f2d2f4db7e7a5d6516af3f, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -1.57
@@ -17253,6 +17257,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 280377321173406690, guid: 691c88c186263e141b30bdf353c1d803, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -14.95
+      objectReference: {fileID: 0}
     - target: {fileID: 280377321898137608, guid: 691c88c186263e141b30bdf353c1d803, type: 3}
       propertyPath: curLayer
       value: 1
@@ -17263,7 +17271,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 280377321898137609, guid: 691c88c186263e141b30bdf353c1d803, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -8.03
       objectReference: {fileID: 0}
     - target: {fileID: 280377321898137609, guid: 691c88c186263e141b30bdf353c1d803, type: 3}
       propertyPath: m_LocalPosition.y
@@ -17852,6 +17860,22 @@ PrefabInstance:
     - target: {fileID: 8614938299864024708, guid: 691c88c186263e141b30bdf353c1d803, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -720
+      objectReference: {fileID: 0}
+    - target: {fileID: 8792123337438274075, guid: 691c88c186263e141b30bdf353c1d803, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8792123337438274075, guid: 691c88c186263e141b30bdf353c1d803, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8792123337438274075, guid: 691c88c186263e141b30bdf353c1d803, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8792123337438274075, guid: 691c88c186263e141b30bdf353c1d803, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8804467724118851419, guid: 691c88c186263e141b30bdf353c1d803, type: 3}
       propertyPath: m_AnchorMax.y

@@ -8,6 +8,8 @@ namespace Xolito.Core
         None,
         Damage,
         EndPoint,
-        Coin
+        Coin,
+        JumpPad,
+        Checkpoint,
     }
 }

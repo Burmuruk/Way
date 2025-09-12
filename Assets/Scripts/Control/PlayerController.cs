@@ -5,10 +5,8 @@ using UnityEngine;
 using Xolito.Utilities;
 using Xolito.Core;
 
-namespace Xolito.Control
-{
-    public class PlayerController : MonoBehaviour
-    {
+namespace Xolito.Control {
+    public class PlayerController : MonoBehaviour {
         //BORRAR SI ROMPE ALGO
         #region AUDIO 
         [SerializeField] public AudioSource source;
@@ -19,7 +17,19 @@ namespace Xolito.Control
         [SerializeField] PlayerSettings pSettings = null;
         Movement.Mover mover;
         public AudioClip jump, dash;
+        [SerializeField] bool canMove = true;
+        public bool registerStop = true;
         #endregion
+
+        public bool CanMove { 
+            get => canMove; 
+            set {
+                if (registerStop)
+                    canMove = value;
+                else 
+                    canMove = true;
+            }
+        }
 
         #region Unity methods
         private void Awake()
@@ -41,6 +51,7 @@ namespace Xolito.Control
         #region Public methods
         public void Move(float direction)
         {
+            if (!canMove) return;
             if (mover.InteractWith_Movement(direction))
             {
 
@@ -94,6 +105,12 @@ namespace Xolito.Control
         {
             mover.Stop();
         }
+
+        public void DisablePlayerMovement() {
+            CanMove = false;
+        }
+
         #endregion
+
     }
 }

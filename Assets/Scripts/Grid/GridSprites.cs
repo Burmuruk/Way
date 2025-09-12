@@ -38,6 +38,14 @@ namespace Xolito.Utilities
             return spritesData[color][type].amount;
         }
 
+        public bool ContainsBlockType(ColorType color, BlockType type) 
+        {
+            if (spritesData == null || applyChanges)
+                Initialize();
+
+            return spritesData[color][type] != null;
+        }
+
         public int Get_SpritesCount(ColorType color, BlockType type)
         {
             int result = -1;
@@ -54,13 +62,18 @@ namespace Xolito.Utilities
 
         public (int x, int y) Get_SpriteOffset(ColorType color, BlockType type, int index)
         {
-            if (spritesData == null || applyChanges)
-                Initialize();
+            try {
+                if (spritesData == null || applyChanges)
+                    Initialize();
 
-            if (color == ColorType.None || type == BlockType.None)
-                return (1, 1);
+                if (color == ColorType.None || type == BlockType.None)
+                    return (1, 1);
 
-            return (spritesData[color][type].amount.x, spritesData[color][type].amount.y);
+                return (spritesData[color][type].amount.x, spritesData[color][type].amount.y);
+            } catch (Exception) {
+
+                throw;
+            }
         }
 
         private void Initialize()

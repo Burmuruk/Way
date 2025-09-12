@@ -39,6 +39,7 @@ namespace Xolito.Control
         [SerializeField] float gravity = 3;
         [SerializeField] float speed = 5;
         [SerializeField] float jumpForce = 5;
+        [SerializeField] float jumpPadForce = 10;
         [SerializeField] float jumpCoolDown = 1f;
 
         [Space]
@@ -57,6 +58,7 @@ namespace Xolito.Control
         [Header("Jump")]
         [Range(0, 2)]
         [SerializeField] float jumpSize = .1f;
+        [SerializeField] float jumpPadSize = .1f;
         [Header("Dash")]
         [Range(0, 1)]
         [SerializeField] float dashOffset = .1f;
@@ -75,6 +77,8 @@ namespace Xolito.Control
         public float Gravity { get => gravity * Time.deltaTime; }
         public float Speed { get => speed; }
         public float JumpForce { get => jumpForce; }
+
+        public float JumpPadForce { get => jumpPadForce; }
         public float JumpCoolDown { get => jumpCoolDown; }
         public List<string> TagsToAvoid { get => tagsToAvoid; }
 
@@ -84,6 +88,7 @@ namespace Xolito.Control
         public float WallDistance { get => wallDistance; }
         public float WallSize { get => wallSize; }
         public float JumpSize { get => jumpSize; }
+        public float JumpPadSize { get => jumpPadSize; }
 
         public float DashDistance { get => dashDistance; }
         public float DashSpeed { get => dashSpeed; }

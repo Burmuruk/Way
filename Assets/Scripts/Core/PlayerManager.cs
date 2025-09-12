@@ -19,10 +19,13 @@ namespace Xolito.Core
         [Header("References")]
         [SerializeField] PlayerController[] players = default;
 
+        bool[] playerAtEnd = new bool[2];
         float xDirection = 0;
 
 
         #endregion
+
+        public bool EndReached { get => playerAtEnd[0] && playerAtEnd[1]; }
 
         private void Awake()
         {
@@ -110,13 +113,34 @@ namespace Xolito.Core
             {
                 players[0].transform.position = start1;
                 players[0].Clear_Velocity();
+                players[0].CanMove = true;
+                players[0].registerStop = true;
                 players[1].transform.position = start2;
                 players[1].Clear_Velocity();
+                players[1].CanMove = true;
+                players[1].registerStop = true;
             }
             catch (System.Exception)
             {
 
             }
+        }
+
+        public void RegisterEnd(PlayerController playerController) {
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (playerController == players[i]) {
+                    playerAtEnd[i] = true;
+                    players[i].CanMove = false;
+
+                    if (!EndReached) {
+                        int idx = i == 0 ? 1 : 0;
+                        players[idx].CanMove = true;
+                        players[idx].registerStop = false;
+                    }
+                }
+            }
+
         }
 
         private void Disable_Inputs() => canCheck = false;
