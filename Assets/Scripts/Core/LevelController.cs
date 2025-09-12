@@ -87,12 +87,12 @@ namespace Xolito.Core
             }
         }
 
-        public void AddStartPoint(GameObject point, ColorType color)
+        public void AddStartPoint(GameObject block, ColorType color)
         {
             if (color == ColorType.Black)
-                startPointDown = point;
+                startPointDown = block;
             else if (color == ColorType.White)
-                startPointUp = point;
+                startPointUp = block;
         }
 
         public void Add_Coin()

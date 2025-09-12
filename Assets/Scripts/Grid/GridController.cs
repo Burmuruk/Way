@@ -174,7 +174,24 @@ namespace Xolito.Utilities
         public void Load()
         {
             GridSaver saver = new GridSaver();
-            (grid, colliders, sprites) = saver.LoadFromTxt("Assets/Data/" + fileName + ".json", Destroy, parents);
+            
+            var (grid, colliders, sprites) = saver.LoadFromTxt("Assets/Data/" + fileName + ".json", Destroy, parents);
+
+            if (grid != null)
+            {
+                (this.grid, this.colliders, this.sprites) = (grid, colliders, sprites);
+
+                foreach (var gBlock in this.grid)
+                {
+                    foreach (var block in gBlock.blocks)
+                    {
+                        if (block.data.Type == BlockType.SpawnPoint)
+                        {
+                            FindObjectOfType<LevelController>().AddStartPoint(block.Block, block.data.sprite.color);
+                        }
+                    }
+                }
+            }
         }
         #endregion
 
@@ -562,7 +579,9 @@ namespace Xolito.Utilities
         #region Interaction
         private void Set_Action(params Point[] points)
         {
-            switch (sprites.GetAction(color, type, spriteIndex))
+            ActionType aType = sprites.GetAction(color, type, spriteIndex);
+            
+            switch (aType)
             {
                 case ActionType.None:
                     for (int i = 0; i < points.Length; i++)
@@ -621,12 +640,6 @@ namespace Xolito.Utilities
 
                     break;
 
-                case ActionType.FinalPoint:
-
-                    SetUp_InteractableBlocks(points, Interaction.EndPoint, out _);
-
-                    break;
-
                 case ActionType.StartPoint:
                     for (int i = 0; i < points.Length; i++)
                     {
@@ -642,6 +655,7 @@ namespace Xolito.Utilities
 
                         startPoints.Add((point, color));
                         lvlController.Set_StartPoint(block.Block, color == ColorType.White, true);
+
                     }
 
                     Find_Pairs(points, curLayer);
@@ -652,9 +666,11 @@ namespace Xolito.Utilities
                     SetUp_InteractableBlocks(points, Interaction.JumpPad, out _);
 
                     break;
+
+                case ActionType.FinalPoint:
                 case ActionType.Checkpoint:
 
-                    SetUp_InteractableBlocks(points, Interaction.Checkpoint, out _);
+                    SetUp_InteractableBlocks(points, GetInteractionFromAction(aType), out _);
                     var (x, y) = (points[0].x, points[0].y);
                     colliders[grid[y, x][curLayer].collider.Value].collider.isTrigger = false;
 
@@ -664,6 +680,13 @@ namespace Xolito.Utilities
                     break;
             }
         }
+
+        private Interaction GetInteractionFromAction(ActionType actionType) =>
+            actionType switch
+            {
+                ActionType.FinalPoint => Interaction.EndPoint,
+                _ => Interaction.Checkpoint
+            };
 
         void Remove_Interactable(SubBlock block)
         {
@@ -1034,7 +1057,7 @@ namespace Xolito.Utilities
                     SetUp_Collider(isH, isAfter, firstP, lastBlocks);
                 }
                 else
-                    SetUp_Collider(null, true, firstP);
+                    SetUp_Collider(null, false, firstP);
             }
 
             void Find_Colliders(ref Point firstP, List<(bool isH, bool, Point, Point[])> pointsData, bool ignoreLayer)

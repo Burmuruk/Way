@@ -92,7 +92,10 @@ namespace Xolito.Utilities
 
             string fullPath = ToFullPath(relativePathInAssets);
             if (!File.Exists(fullPath))
-                throw new FileNotFoundException($"No se encontró el archivo en: {fullPath}");
+            {
+                Debug.LogError("File not found");
+                return (null, null, null);
+            }    
 
             string json = File.ReadAllText(fullPath);
             var dto = JsonUtility.FromJson<SaveFileDTO>(json);

@@ -37,7 +37,8 @@ namespace Xolito.Utilities
         Background,
         Collectables,
         JumpPad,
-        CheckPoint
+        CheckPoint,
+        HalfEnemy
     }
 
     public enum ActionType
