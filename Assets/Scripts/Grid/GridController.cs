@@ -1057,7 +1057,7 @@ namespace Xolito.Utilities
                     SetUp_Collider(isH, isAfter, firstP, lastBlocks);
                 }
                 else
-                    SetUp_Collider(null, false, firstP);
+                    SetUp_Collider(null, true, firstP);
             }
 
             void Find_Colliders(ref Point firstP, List<(bool isH, bool, Point, Point[])> pointsData, bool ignoreLayer)

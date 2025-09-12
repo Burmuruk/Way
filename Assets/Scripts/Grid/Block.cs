@@ -51,8 +51,9 @@ namespace Xolito.Utilities
             }
         }
 
-        public GridBlock()
+        public GridBlock(Vector3 position)
         {
+            Position = position;
             blocks = new(MAX_LAYERS);
         }
 

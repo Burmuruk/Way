@@ -234,7 +234,7 @@ namespace Xolito.Utilities
 
         public GridBlock ToGridBlock(GridSprites sprites, Dictionary<BlockType, GameObject> parents)
         {
-            var gb = new GridBlock();
+            var gb = new GridBlock(new Vector3(x, y, 0));
 
             gb.blocks = new();
             foreach (var sbdto in blocks)
