@@ -100,13 +100,17 @@ namespace Xolito.Movement
 
             (float ? distance, GameObject item) = Get_DistanceToMove(Vector2.up, pSettings.JumpSize);
 
-            if (!distance.HasValue)
-            {
-                Move_Gravity();
-                Jump();
+            //if (!distance.HasValue)
+            //{
+            //    Move_Gravity();
+            //    Jump();
 
-                StartCoroutine(cdJump.CoolDown());
-            }
+            //    StartCoroutine(cdJump.CoolDown());
+            //}
+            Move_Gravity();
+            Jump();
+
+            StartCoroutine(cdJump.CoolDown());
 
             return false;
         }

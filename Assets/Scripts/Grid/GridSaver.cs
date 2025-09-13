@@ -108,7 +108,9 @@ namespace Xolito.Utilities
             {
                 var (x, y) = (cell.blocks[0].data.posX, cell.blocks[0].data.posY);
                 var gb = grid[y, x];
+
                 grid[y, x] = gb = cell.ToGridBlock(sprites, parents);
+                gb.Position = ScreenToWorldPoint((y, x), dto.cols, dto.rows);
 
                 foreach (var sbdto in gb.blocks)
                 {
@@ -135,48 +137,69 @@ namespace Xolito.Utilities
         }
 
         private Vector3 ScreenToWorldPoint(SubBlock block, int columns, int rows, GridSprites sprites)
-{
-    // Posición de cuadrícula (asegúrate que sea x,y en ese orden)
-    int gridX = block.Position.x;
-    int gridY = block.Position.y;
+        {
+            // Posición de cuadrícula (asegúrate que sea x,y en ese orden)
+            int gridX = block.Position.x;
+            int gridY = block.Position.y;
 
-    // Tamaño del bloque de la grilla en píxeles
-    var blockSize = new Vector2(
-        (float)Camera.main.pixelWidth / columns,
-        (float)Camera.main.pixelHeight / rows
-    );
+            // Tamaño del bloque de la grilla en píxeles
+            var blockSize = new Vector2(
+                (float)Camera.main.pixelWidth / columns,
+                (float)Camera.main.pixelHeight / rows
+            );
 
-    // Cantidad de subdivisiones que ocupa el sprite
-    var (countX, countY) = sprites.Get_SpriteOffset(
-        block.data.sprite.color, block.data.sprite.type, block.data.sprite.idx
-    );
-    Vector2Int amount = new(
-        countX > 0 ? countX : 1,
-        countY > 0 ? countY : 1
-    );
+            // Cantidad de subdivisiones que ocupa el sprite
+            var (countX, countY) = sprites.Get_SpriteOffset(
+                block.data.sprite.color, block.data.sprite.type, block.data.sprite.idx
+            );
+            Vector2Int amount = new(
+                countX > 0 ? countX : 1,
+                countY > 0 ? countY : 1
+            );
 
-    // Tamaño de cada subcelda
-    float sizeX = blockSize.x / amount.x;
-    float sizeY = blockSize.y / amount.y;
+            // Tamaño de cada subcelda
+            float sizeX = blockSize.x / amount.x;
+            float sizeY = blockSize.y / amount.y;
 
-    // IMPORTANTE: usar la mitad de la subcelda, no del bloque completo
-    var subCellHalf = new Vector2(sizeX * 0.5f, sizeY * 0.5f);
+            // IMPORTANTE: usar la mitad de la subcelda, no del bloque completo
+            var subCellHalf = new Vector2(sizeX * 0.5f, sizeY * 0.5f);
 
-    // Offset discreto del sprite dentro del bloque (asumo que ya lo traes entero)
-    int offX = (int)block.data.spriteOffset.x;
-    int offY = (int)block.data.spriteOffset.y;
+            // Offset discreto del sprite dentro del bloque (asumo que ya lo traes entero)
+            int offX = (int)block.data.spriteOffset.x;
+            int offY = (int)block.data.spriteOffset.y;
 
-    // Coordenadas de pantalla (en píxeles)
-    var screen = new Vector2(
-        sizeX * ((gridX * amount.x) + offX) + subCellHalf.x,
-        sizeY * ((gridY * amount.y) + offY) + subCellHalf.y
-    );
+            // Coordenadas de pantalla (en píxeles)
+            var screen = new Vector2(
+                sizeX * ((gridX * amount.x) + offX) + subCellHalf.x,
+                sizeY * ((gridY * amount.y) + offY) + subCellHalf.y
+            );
 
-    // A mundo
-    var world = Camera.main.ScreenToWorldPoint(new Vector3(screen.x, screen.y, 0f));
-    world.z = 0f;
-    return world;
-}
+            // A mundo
+            var world = Camera.main.ScreenToWorldPoint(new Vector3(screen.x, screen.y, 0f));
+            world.z = 0f;
+            return world;
+        }
+
+        private Vector3 ScreenToWorldPoint((int y, int x) point, int columns, int rows)
+        {
+            var blockSize = new Vector2(
+                (float)Camera.main.pixelWidth / columns,
+                (float)Camera.main.pixelHeight / rows
+            );
+
+            Vector3 newPosition = Camera.main.ScreenToWorldPoint(new Vector2
+            {
+                x = point.x * blockSize.x + blockSize.x / 2,
+                y = point.y * blockSize.y + blockSize.y / 2,
+            });
+
+            return new Vector3
+            {
+                x = newPosition.x,
+                y = newPosition.y,
+                z = 0
+            };
+        }
 
 
         private static string ToFullPath(string relativePathInAssets)
@@ -234,7 +257,7 @@ namespace Xolito.Utilities
 
         public GridBlock ToGridBlock(GridSprites sprites, Dictionary<BlockType, GameObject> parents)
         {
-            var gb = new GridBlock(new Vector3(x, y, 0));
+            var gb = new GridBlock();
 
             gb.blocks = new();
             foreach (var sbdto in blocks)

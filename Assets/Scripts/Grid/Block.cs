@@ -24,7 +24,7 @@ namespace Xolito.Utilities
                     blocks[idx] = value;
             }
         }
-        public Vector3 Position { get; private set; }
+        public Vector3 Position { get; set; }
 
         public static bool operator true(GridBlock block) => block != null;
         public static bool operator false(GridBlock block) => block == null;
@@ -51,9 +51,8 @@ namespace Xolito.Utilities
             }
         }
 
-        public GridBlock(Vector3 position)
+        public GridBlock()
         {
-            Position = position;
             blocks = new(MAX_LAYERS);
         }
 

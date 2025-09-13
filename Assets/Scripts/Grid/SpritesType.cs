@@ -38,7 +38,9 @@ namespace Xolito.Utilities
         Collectables,
         JumpPad,
         CheckPoint,
-        HalfEnemy
+        HalfEnemyH,
+        HalfEnemyV,
+        HalfGround
     }
 
     public enum ActionType
@@ -51,7 +53,8 @@ namespace Xolito.Utilities
         FinalPoint,
         StartPoint,
         JumpPad,
-        Checkpoint
+        Checkpoint,
+        HalfCollider
     }
 
     public enum Offset

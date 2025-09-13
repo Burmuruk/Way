@@ -251,7 +251,7 @@ namespace Xolito.Utilities
                 //Point first = newPoints[0];
                 //newPoints.RemoveAt(0);
                 var col = colliders[index];
-                col.item.transform.position = col.Head.Block.transform.position;
+                col.item.transform.position = col.First.Block.transform.position;
 
                 Set_ColliderSize(col.isHorizontal, col);
 
@@ -669,10 +669,12 @@ namespace Xolito.Utilities
 
                 case ActionType.FinalPoint:
                 case ActionType.Checkpoint:
+                case ActionType.HalfCollider:
 
                     SetUp_InteractableBlocks(points, GetInteractionFromAction(aType), out _);
                     var (x, y) = (points[0].x, points[0].y);
                     colliders[grid[y, x][curLayer].collider.Value].collider.isTrigger = false;
+                    colliders[grid[y, x][curLayer].collider.Value].collider.gameObject.layer = 0;
 
                     break;
 
@@ -685,6 +687,7 @@ namespace Xolito.Utilities
             actionType switch
             {
                 ActionType.FinalPoint => Interaction.EndPoint,
+                ActionType.HalfCollider => Interaction.None,
                 _ => Interaction.Checkpoint
             };
 
@@ -1062,8 +1065,14 @@ namespace Xolito.Utilities
 
             void Find_Colliders(ref Point firstP, List<(bool isH, bool, Point, Point[])> pointsData, bool ignoreLayer)
             {
+                int selectedDir = 0;
+
                 for (int dirIdx = 0; dirIdx < directions.Length; dirIdx++)
                 {
+                    if (founded && (((selectedDir == 0 && dirIdx != 1) || (selectedDir == 1 && dirIdx > 1))
+                        || ((selectedDir == 2 && dirIdx != 3) || (selectedDir == 3 && dirIdx > 2))))
+                        continue;
+
                     if ((direction & directions[dirIdx].Direction) == 0) continue;
 
                     if (firstP.y + directions[dirIdx].Y == directions[dirIdx].Limit || firstP.x + directions[dirIdx].X == directions[dirIdx].Limit)
@@ -1077,6 +1086,12 @@ namespace Xolito.Utilities
                     {
                         SubBlock curBlock = curGBlock[idx];
 
+                        if (!curBlock.collider.HasValue || (curBlock.collider.HasValue && colliders[curBlock.collider.Value].isHorizontal.HasValue && colliders[curBlock.collider.Value].isHorizontal != dir.isH))
+                            continue;
+
+                        if (colliders[curBlock.collider.Value].IsTrigger)
+                            continue;
+
                         if (ignoreLayer && firstP.layer != idx)
                         {
                             Set_Sprite(curGBlock[firstP.layer], curGBlock[idx].data.sprite);
@@ -1084,12 +1099,6 @@ namespace Xolito.Utilities
                         }
                         else
                             newPoint = new Point(newPoint.y, newPoint.x, idx);
-
-                        if (curBlock.collider.HasValue && (curBlock.data.isHorizontal.HasValue && curBlock.data.isHorizontal != dir.isH))
-                            continue;
-
-                        if (curBlock.collider.HasValue && (colliders[curBlock.collider.Value].IsTrigger || colliders[curBlock.collider.Value].IsTrigger))
-                            continue;
 
                         switch (dirIdx)
                         {
@@ -1120,6 +1129,7 @@ namespace Xolito.Utilities
                             default:
 
                                 founded = true;
+                                selectedDir = dirIdx;
                                 //dirIdx = directions.Length;
                                 //return;
                                 break;
@@ -1144,9 +1154,13 @@ namespace Xolito.Utilities
                 col = Create_NewCollider(horizontal, firstBlock, amount);
             }
             else
+            {
                 col = colliders[firstBlock.collider.Value];
+                col.isHorizontal = horizontal;
+            }
 
             firstBlock.IsHorizontal = horizontal;
+            col.isHorizontal = horizontal;
 
             if (atRight)
             {
@@ -1207,14 +1221,16 @@ namespace Xolito.Utilities
 
                 if (gBlock.ContainsBlockType(BlockType.Ground, out var layer))
                 {
-                    Remove_Collider(gBlock[layer]);
                     block = gBlock[layer];
+
+                    if (block.collider.HasValue && block.collider != cur.collider)
+                        Remove_Collider(gBlock[layer]);
                 }
                 else
                 {
                     block = gBlock[cur.Layer];
 
-                    if (block.collider.HasValue)
+                    if (block.collider.HasValue && block.collider != cur.collider)
                         Remove_Collider(block);
                 }
 
@@ -1241,6 +1257,7 @@ namespace Xolito.Utilities
                 {
                     colliders[i] = data;
                     curBlock.collider = i;
+                    curBlock.IsHorizontal = horizontal;
                     added = true;
                     break;
                 }
@@ -1250,13 +1267,21 @@ namespace Xolito.Utilities
             {
                 colliders.Add(data);
                 curBlock.collider = colliders.Count - 1;
+                curBlock.IsHorizontal = horizontal;
             }
 
             curBlock.data.isHorizontal = horizontal;
             col = colliders[curBlock.collider.Value];
+            col.isHorizontal = horizontal;
 
             col.collider.transform.parent = collidersParent.transform;
-            col.item.transform.position = curBlock.Block.transform.position;
+
+            if (block.data.sprite.amount.x > 1 || block.data.sprite.amount.y > 1)
+            {
+                col.item.transform.position = Get_SpritePosition(block, out var offset) ;
+            }
+            else
+                col.item.transform.position = curBlock.Block.transform.position;
             return col;
         }
 

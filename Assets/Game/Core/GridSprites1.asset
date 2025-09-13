@@ -19,6 +19,7 @@ MonoBehaviour:
     - {fileID: 9071535530400839753, guid: d13c59df6b374db4c9f459e8eca39c28, type: 3}
     - {fileID: 3184656857429658217, guid: 31feafae6b495d54895acfbbb83271dd, type: 3}
     - {fileID: -5028293573921326177, guid: caf7ee1505d0e364e94c26fa94e598f5, type: 3}
+    - {fileID: -8051873559253564002, guid: 6a2c3d9433f6ee842a1349d282d8727c, type: 3}
     type: 2
     action: 2
     amount: {x: 0, y: 0}
@@ -53,7 +54,7 @@ MonoBehaviour:
   - sprites:
     - {fileID: -782295200670644480, guid: efdf6845b588ddc40aeed26f9522faa6, type: 3}
     - {fileID: -8450203303293478290, guid: e0d333154aed3394cbb4eabf36bedee1, type: 3}
-    type: 6
+    type: 11
     action: 4
     amount: {x: 2, y: 0}
   - sprites:
@@ -71,12 +72,29 @@ MonoBehaviour:
     type: 10
     action: 8
     amount: {x: 0, y: 0}
+  - sprites:
+    - {fileID: -2306419299329670923, guid: b328cff56853ab7408b1279bcf2c65aa, type: 3}
+    type: 8
+    action: 3
+    amount: {x: 0, y: 0}
+  - sprites:
+    - {fileID: -782295200670644480, guid: efdf6845b588ddc40aeed26f9522faa6, type: 3}
+    - {fileID: -8450203303293478290, guid: e0d333154aed3394cbb4eabf36bedee1, type: 3}
+    type: 12
+    action: 4
+    amount: {x: 2, y: 2}
+  - sprites:
+    - {fileID: 2067553012399108248, guid: d06bed1aebf485c4daec3627526f3a95, type: 3}
+    type: 13
+    action: 9
+    amount: {x: 0, y: 2}
   whiteBlocks:
   - sprites:
     - {fileID: -4002859245236919288, guid: 22e55781bb28027479816ea20203403b, type: 3}
     - {fileID: -643163916053579765, guid: d13c59df6b374db4c9f459e8eca39c28, type: 3}
     - {fileID: 3209211324283372500, guid: 31feafae6b495d54895acfbbb83271dd, type: 3}
     - {fileID: 885059833037154399, guid: caf7ee1505d0e364e94c26fa94e598f5, type: 3}
+    - {fileID: 2652202518035950586, guid: 6a2c3d9433f6ee842a1349d282d8727c, type: 3}
     type: 2
     action: 2
     amount: {x: 0, y: 0}
@@ -111,7 +129,7 @@ MonoBehaviour:
   - sprites:
     - {fileID: 5340064765378247011, guid: e0d333154aed3394cbb4eabf36bedee1, type: 3}
     - {fileID: 2429646755606082977, guid: efdf6845b588ddc40aeed26f9522faa6, type: 3}
-    type: 6
+    type: 11
     action: 4
     amount: {x: 2, y: 0}
   - sprites:
@@ -129,3 +147,19 @@ MonoBehaviour:
     type: 10
     action: 8
     amount: {x: 0, y: 0}
+  - sprites:
+    - {fileID: -2402179951232766528, guid: b328cff56853ab7408b1279bcf2c65aa, type: 3}
+    type: 8
+    action: 3
+    amount: {x: 0, y: 0}
+  - sprites:
+    - {fileID: 2429646755606082977, guid: efdf6845b588ddc40aeed26f9522faa6, type: 3}
+    - {fileID: 5340064765378247011, guid: e0d333154aed3394cbb4eabf36bedee1, type: 3}
+    type: 12
+    action: 4
+    amount: {x: 2, y: 2}
+  - sprites:
+    - {fileID: 2662442282307545940, guid: d06bed1aebf485c4daec3627526f3a95, type: 3}
+    type: 13
+    action: 9
+    amount: {x: 0, y: 2}
