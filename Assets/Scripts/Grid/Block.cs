@@ -58,9 +58,9 @@ namespace Xolito.Utilities
 
         public (int y, int x) GridPosition => position;
 
-        public int? GetCollider(int layer) => blocks[layer].collider;
+        public string GetCollider(int layer) => blocks[layer].ColliderId;
 
-        public void SetCollider(int? idx, int layer) => blocks[layer].collider = idx;
+        public void SetCollider(string id, int layer) => blocks[layer].ColliderId = id;
 
         private BlockData Get_Data(int layer) => blocks[layer].data;
 

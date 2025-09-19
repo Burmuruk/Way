@@ -3,45 +3,33 @@ using UnityEngine;
 
 namespace Xolito.Utilities
 {
-    public class SpriteData
+    public readonly struct SpriteData : IEquatable<SpriteData>
     {
-        public ColorType color;
-        public BlockType type;
-        public int idx;
-        public Vector2Int amount;
+        public readonly ColorType color;
+        public readonly BlockType type;
+        public readonly Vector2Int amount;
+        public readonly int idx;
 
-        public SpriteData(ColorType color, BlockType type, Vector2Int amount, int index)
+        public SpriteData(ColorType color, BlockType type, Vector2Int amount, int idx)
         {
             this.color = color;
             this.type = type;
             this.amount = amount;
-            this.idx = index;
+            this.idx = idx;
         }
 
-        public override bool Equals(object obj)
-        {
-            return obj is SpriteData data &&
-                   color == data.color &&
-                   type == data.type &&
-                   idx == data.idx &&
-                   amount.Equals(data.amount);
-        }
+        public bool Equals(SpriteData other) =>
+            color == other.color &&
+            type == other.type &&
+            amount == other.amount &&
+            idx == other.idx;
 
-        public static bool operator == (SpriteData a, SpriteData b)
-        {
-            if (ReferenceEquals(a, b)) return true;
-            if (a is null || b is null) return false;
-            return a.Equals(b);
-        }
+        public override bool Equals(object obj) => obj is SpriteData other && Equals(other);
 
-        public static bool operator != (SpriteData a, SpriteData b) => !(a == b);
+        public override int GetHashCode() => HashCode.Combine(color, type, amount, idx);
 
-        public override int GetHashCode()
-        => HashCode.Combine(color, type, idx, amount);
-
-        public override string ToString()
-        {
-            return $"SpriteData: color={color}- type={type}- idx={idx}- amount=({amount.x},{amount.y})\n";
-        }
+        public static bool operator ==(SpriteData left, SpriteData right) => left.Equals(right);
+        public static bool operator !=(SpriteData left, SpriteData right) => !left.Equals(right);
     }
+
 }

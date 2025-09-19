@@ -261,6 +261,84 @@
         },
         {
             "size": {
+                "x": 0.4449999928474426,
+                "y": 0.8299999833106995
+            },
+            "position": {
+                "x": -0.22222185134887696,
+                "y": -0.41666656732559206
+            },
+            "offset": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "blocks": [
+                {
+                    "x": 9,
+                    "y": 5,
+                    "z": 2
+                }
+            ],
+            "isTrigger": true,
+            "isHorizontal": true,
+            "hasDirection": true,
+            "headIdx": 0,
+            "name": "Col17",
+            "uLayer": 10,
+            "interaction": 1,
+            "id": "5eaf6cc3-a050-41fb-b249-b46d06dbd4a7"
+        },
+        {
+            "size": {
+                "x": 0.8899999856948853,
+                "y": 4.150000095367432
+            },
+            "position": {
+                "x": 2.222222328186035,
+                "y": -1.25
+            },
+            "offset": {
+                "x": 0.0,
+                "y": 1.6799999475479127
+            },
+            "blocks": [
+                {
+                    "x": 12,
+                    "y": 4,
+                    "z": 1
+                },
+                {
+                    "x": 12,
+                    "y": 5,
+                    "z": 1
+                },
+                {
+                    "x": 12,
+                    "y": 6,
+                    "z": 1
+                },
+                {
+                    "x": 12,
+                    "y": 7,
+                    "z": 1
+                },
+                {
+                    "x": 12,
+                    "y": 8,
+                    "z": 1
+                }
+            ],
+            "isTrigger": false,
+            "isHorizontal": false,
+            "hasDirection": true,
+            "headIdx": 0,
+            "name": "Col5",
+            "uLayer": 0,
+            "interaction": 0,
+            "id": "febc7210-dfbf-4754-863a-c9bd9714bcfa"
+        },
+        {
+            "size": {
                 "x": 7.119999885559082,
                 "y": 0.8299999833106995
             },
@@ -318,47 +396,42 @@
             "isHorizontal": true,
             "hasDirection": true,
             "headIdx": 0,
-            "name": "Col4",
+            "name": "Col17",
             "uLayer": 0,
             "interaction": 0,
-            "id": "a522ad7f-e493-4e2b-93c0-57472da0c53c"
+            "id": "1171dc93-55b4-4e44-85fb-f69e75159fb6"
         },
         {
             "size": {
                 "x": 0.8899999856948853,
-                "y": 4.150000095367432
+                "y": 3.319999933242798
             },
             "position": {
-                "x": 2.222222328186035,
-                "y": -1.25
+                "x": -4.0,
+                "y": -0.41666656732559206
             },
             "offset": {
                 "x": 0.0,
-                "y": 1.6799999475479127
+                "y": 1.2599999904632569
             },
             "blocks": [
                 {
-                    "x": 12,
-                    "y": 4,
-                    "z": 1
-                },
-                {
-                    "x": 12,
+                    "x": 5,
                     "y": 5,
                     "z": 1
                 },
                 {
-                    "x": 12,
+                    "x": 5,
                     "y": 6,
                     "z": 1
                 },
                 {
-                    "x": 12,
+                    "x": 5,
                     "y": 7,
                     "z": 1
                 },
                 {
-                    "x": 12,
+                    "x": 5,
                     "y": 8,
                     "z": 1
                 }
@@ -367,10 +440,68 @@
             "isHorizontal": false,
             "hasDirection": true,
             "headIdx": 0,
-            "name": "Col5",
+            "name": "Col7",
             "uLayer": 0,
             "interaction": 0,
-            "id": "febc7210-dfbf-4754-863a-c9bd9714bcfa"
+            "id": "55835f1e-924d-4584-af99-c71d81a67899"
+        },
+        {
+            "size": {
+                "x": 0.4449999928474426,
+                "y": 0.8299999833106995
+            },
+            "position": {
+                "x": -0.6666665077209473,
+                "y": -0.41666656732559206
+            },
+            "offset": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "blocks": [
+                {
+                    "x": 9,
+                    "y": 5,
+                    "z": 1
+                }
+            ],
+            "isTrigger": true,
+            "isHorizontal": true,
+            "hasDirection": true,
+            "headIdx": 0,
+            "name": "Col13",
+            "uLayer": 10,
+            "interaction": 1,
+            "id": "7a1d2c13-0d15-46ec-95e9-16428702593e"
+        },
+        {
+            "size": {
+                "x": 0.8899999856948853,
+                "y": 0.41499999165534975
+            },
+            "position": {
+                "x": -1.3333330154418946,
+                "y": 1.041666865348816
+            },
+            "offset": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "blocks": [
+                {
+                    "x": 8,
+                    "y": 7,
+                    "z": 1
+                }
+            ],
+            "isTrigger": true,
+            "isHorizontal": true,
+            "hasDirection": true,
+            "headIdx": 0,
+            "name": "Col9",
+            "uLayer": 0,
+            "interaction": 0,
+            "id": "5a246b7d-0975-4144-ad36-6d24030fbd3b"
         },
         {
             "size": {
@@ -426,117 +557,10 @@
             "isHorizontal": true,
             "hasDirection": true,
             "headIdx": 0,
-            "name": "Col6",
+            "name": "Col17",
             "uLayer": 0,
             "interaction": 0,
-            "id": "7226f45a-7c44-4a0b-9d93-ebd38292853b"
-        },
-        {
-            "size": {
-                "x": 0.8899999856948853,
-                "y": 3.319999933242798
-            },
-            "position": {
-                "x": -4.0,
-                "y": -0.41666656732559206
-            },
-            "offset": {
-                "x": 0.0,
-                "y": 1.2599999904632569
-            },
-            "blocks": [
-                {
-                    "x": 5,
-                    "y": 5,
-                    "z": 1
-                },
-                {
-                    "x": 5,
-                    "y": 6,
-                    "z": 1
-                },
-                {
-                    "x": 5,
-                    "y": 7,
-                    "z": 1
-                },
-                {
-                    "x": 5,
-                    "y": 8,
-                    "z": 1
-                }
-            ],
-            "isTrigger": false,
-            "isHorizontal": false,
-            "hasDirection": true,
-            "headIdx": 0,
-            "name": "Col7",
-            "uLayer": 0,
-            "interaction": 0,
-            "id": "55835f1e-924d-4584-af99-c71d81a67899"
-        },
-        {
-            "size": {
-                "x": 1.7799999713897706,
-                "y": 0.8299999833106995
-            },
-            "position": {
-                "x": -2.222222328186035,
-                "y": -0.41666656732559206
-            },
-            "offset": {
-                "x": 0.4449999928474426,
-                "y": 0.0
-            },
-            "blocks": [
-                {
-                    "x": 7,
-                    "y": 5,
-                    "z": 1
-                },
-                {
-                    "x": 8,
-                    "y": 5,
-                    "z": 1
-                }
-            ],
-            "isTrigger": false,
-            "isHorizontal": true,
-            "hasDirection": true,
-            "headIdx": 0,
-            "name": "Col8",
-            "uLayer": 0,
-            "interaction": 0,
-            "id": "6b5c6675-8e72-4360-b0e2-110b491a947d"
-        },
-        {
-            "size": {
-                "x": 0.8899999856948853,
-                "y": 0.8299999833106995
-            },
-            "position": {
-                "x": -1.3333330154418946,
-                "y": 0.4166668653488159
-            },
-            "offset": {
-                "x": 0.0,
-                "y": 0.0
-            },
-            "blocks": [
-                {
-                    "x": 8,
-                    "y": 6,
-                    "z": 1
-                }
-            ],
-            "isTrigger": false,
-            "isHorizontal": false,
-            "hasDirection": false,
-            "headIdx": 0,
-            "name": "Col9",
-            "uLayer": 0,
-            "interaction": 0,
-            "id": "e6503146-aaf0-4a15-8b49-0a97a4167a43"
+            "id": "f351e8da-be35-4da1-8a7b-eb8df56e8300"
         },
         {
             "size": {
@@ -555,177 +579,17 @@
                 {
                     "x": 11,
                     "y": 5,
-                    "z": 1
-                }
-            ],
-            "isTrigger": false,
-            "isHorizontal": false,
-            "hasDirection": false,
-            "headIdx": 0,
-            "name": "Col10",
-            "uLayer": 0,
-            "interaction": 0,
-            "id": "f5933bf8-87c2-450d-9cb9-152fa5fded5f"
-        },
-        {
-            "size": {
-                "x": 0.8899999856948853,
-                "y": 0.8299999833106995
-            },
-            "position": {
-                "x": 1.3333330154418946,
-                "y": 1.25
-            },
-            "offset": {
-                "x": 0.0,
-                "y": 0.0
-            },
-            "blocks": [
-                {
-                    "x": 11,
-                    "y": 7,
-                    "z": 1
-                }
-            ],
-            "isTrigger": false,
-            "isHorizontal": false,
-            "hasDirection": false,
-            "headIdx": 0,
-            "name": "Col11",
-            "uLayer": 0,
-            "interaction": 0,
-            "id": "476fc763-1ceb-4751-bc14-7d85dfd82541"
-        },
-        {
-            "size": {
-                "x": 1.7799999713897706,
-                "y": 0.8299999833106995
-            },
-            "position": {
-                "x": -1.3333330154418946,
-                "y": 2.0833330154418947
-            },
-            "offset": {
-                "x": 0.4449999928474426,
-                "y": 0.0
-            },
-            "blocks": [
-                {
-                    "x": 8,
-                    "y": 8,
-                    "z": 1
-                },
-                {
-                    "x": 9,
-                    "y": 8,
-                    "z": 1
+                    "z": 2
                 }
             ],
             "isTrigger": false,
             "isHorizontal": true,
             "hasDirection": true,
             "headIdx": 0,
-            "name": "Col12",
+            "name": "Col20",
             "uLayer": 0,
-            "interaction": 0,
-            "id": "2d2cdf86-7dff-4cba-be48-4da2b319c97b"
-        },
-        {
-            "size": {
-                "x": 0.8899999856948853,
-                "y": 0.41499999165534975
-            },
-            "position": {
-                "x": 0.4444437026977539,
-                "y": 0.20833313465118409
-            },
-            "offset": {
-                "x": 0.0,
-                "y": 0.0
-            },
-            "blocks": [
-                {
-                    "x": 10,
-                    "y": 6,
-                    "z": 1
-                }
-            ],
-            "isTrigger": false,
-            "isHorizontal": true,
-            "hasDirection": true,
-            "headIdx": 0,
-            "name": "Col14",
-            "uLayer": 0,
-            "interaction": 0,
-            "id": "961bf9a8-01f5-49a1-b753-6c57b934726f"
-        },
-        {
-            "size": {
-                "x": 0.8899999856948853,
-                "y": 2.490000009536743
-            },
-            "position": {
-                "x": -3.111111640930176,
-                "y": 0.4166668653488159
-            },
-            "offset": {
-                "x": 0.0,
-                "y": 0.8399999737739563
-            },
-            "blocks": [
-                {
-                    "x": 6,
-                    "y": 6,
-                    "z": 1
-                },
-                {
-                    "x": 6,
-                    "y": 7,
-                    "z": 1
-                },
-                {
-                    "x": 6,
-                    "y": 8,
-                    "z": 1
-                }
-            ],
-            "isTrigger": false,
-            "isHorizontal": false,
-            "hasDirection": true,
-            "headIdx": 0,
-            "name": "Col14",
-            "uLayer": 0,
-            "interaction": 0,
-            "id": "efa26770-e343-4cf0-adbf-d5898a75a7f9"
-        },
-        {
-            "size": {
-                "x": 0.8899999856948853,
-                "y": 0.41499999165534975
-            },
-            "position": {
-                "x": 0.4444437026977539,
-                "y": -0.625
-            },
-            "offset": {
-                "x": 0.0,
-                "y": 0.0
-            },
-            "blocks": [
-                {
-                    "x": 10,
-                    "y": 5,
-                    "z": 1
-                }
-            ],
-            "isTrigger": false,
-            "isHorizontal": true,
-            "hasDirection": true,
-            "headIdx": 0,
-            "name": "Col15",
-            "uLayer": 0,
-            "interaction": 0,
-            "id": "f48bc543-1872-40af-84e4-606b17ebfc99"
+            "interaction": 5,
+            "id": "0a32a1d1-327c-4a51-86b6-7dab700a6fbd"
         },
         {
             "size": {
@@ -754,16 +618,16 @@
             "name": "Col16",
             "uLayer": 0,
             "interaction": 0,
-            "id": "02ac2e8f-7424-4ebb-9158-b381d67c7b1e"
+            "id": "c6df868b-64fb-4956-a8a4-357bd745a9d9"
         },
         {
             "size": {
                 "x": 0.8899999856948853,
-                "y": 0.41499999165534975
+                "y": 0.8299999833106995
             },
             "position": {
-                "x": -2.222222328186035,
-                "y": 1.041666865348816
+                "x": -3.111111640930176,
+                "y": 2.0833330154418947
             },
             "offset": {
                 "x": 0.0,
@@ -771,77 +635,19 @@
             },
             "blocks": [
                 {
-                    "x": 7,
-                    "y": 7,
-                    "z": 1
-                }
-            ],
-            "isTrigger": false,
-            "isHorizontal": true,
-            "hasDirection": true,
-            "headIdx": 0,
-            "name": "Col17",
-            "uLayer": 0,
-            "interaction": 0,
-            "id": "523fef13-ee41-45b6-a5be-f7dc423aa0cd"
-        },
-        {
-            "size": {
-                "x": 0.8899999856948853,
-                "y": 0.41499999165534975
-            },
-            "position": {
-                "x": -2.222222328186035,
-                "y": 1.875
-            },
-            "offset": {
-                "x": 0.0,
-                "y": 0.0
-            },
-            "blocks": [
-                {
-                    "x": 7,
+                    "x": 6,
                     "y": 8,
-                    "z": 1
+                    "z": 2
                 }
             ],
             "isTrigger": false,
             "isHorizontal": true,
             "hasDirection": true,
             "headIdx": 0,
-            "name": "Col18",
+            "name": "Col21",
             "uLayer": 0,
-            "interaction": 0,
-            "id": "db8454c5-4176-47cf-a4d2-bc9dde42d2fd"
-        },
-        {
-            "size": {
-                "x": 0.8899999856948853,
-                "y": 0.41499999165534975
-            },
-            "position": {
-                "x": -1.3333330154418946,
-                "y": 1.458333134651184
-            },
-            "offset": {
-                "x": 0.0,
-                "y": 0.0
-            },
-            "blocks": [
-                {
-                    "x": 8,
-                    "y": 7,
-                    "z": 1
-                }
-            ],
-            "isTrigger": false,
-            "isHorizontal": true,
-            "hasDirection": true,
-            "headIdx": 0,
-            "name": "Col19",
-            "uLayer": 0,
-            "interaction": 0,
-            "id": "b161c94b-1c6f-480c-aee6-679c7be72fda"
+            "interaction": 2,
+            "id": "b99c239b-e0a3-4fa8-9475-f496bdb8e228"
         },
         {
             "size": {
@@ -863,14 +669,256 @@
                     "z": 1
                 }
             ],
+            "isTrigger": true,
+            "isHorizontal": true,
+            "hasDirection": true,
+            "headIdx": 0,
+            "name": "Col10",
+            "uLayer": 0,
+            "interaction": 0,
+            "id": "e9419bba-5544-46ee-805c-e52a99cf0112"
+        },
+        {
+            "size": {
+                "x": 0.8899999856948853,
+                "y": 0.41499999165534975
+            },
+            "position": {
+                "x": 1.3333330154418946,
+                "y": 1.875
+            },
+            "offset": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "blocks": [
+                {
+                    "x": 11,
+                    "y": 8,
+                    "z": 1
+                }
+            ],
+            "isTrigger": true,
+            "isHorizontal": true,
+            "hasDirection": true,
+            "headIdx": 0,
+            "name": "Col12",
+            "uLayer": 0,
+            "interaction": 0,
+            "id": "95a0526a-704b-4c5f-90db-e3be70598516"
+        },
+        {
+            "size": {
+                "x": 0.8899999856948853,
+                "y": 0.8299999833106995
+            },
+            "position": {
+                "x": -2.222222328186035,
+                "y": 2.0833330154418947
+            },
+            "offset": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "blocks": [
+                {
+                    "x": 7,
+                    "y": 8,
+                    "z": 2
+                }
+            ],
             "isTrigger": false,
             "isHorizontal": true,
             "hasDirection": true,
             "headIdx": 0,
-            "name": "Col20",
+            "name": "Col22",
+            "uLayer": 0,
+            "interaction": 2,
+            "id": "9b7af813-1a20-4a1a-98e3-e37603b0ae15"
+        },
+        {
+            "size": {
+                "x": 0.8899999856948853,
+                "y": 1.659999966621399
+            },
+            "position": {
+                "x": -2.222222328186035,
+                "y": -0.41666656732559206
+            },
+            "offset": {
+                "x": 0.0,
+                "y": 0.41999998688697817
+            },
+            "blocks": [
+                {
+                    "x": 7,
+                    "y": 5,
+                    "z": 1
+                },
+                {
+                    "x": 7,
+                    "y": 6,
+                    "z": 1
+                }
+            ],
+            "isTrigger": false,
+            "isHorizontal": false,
+            "hasDirection": true,
+            "headIdx": 0,
+            "name": "Col8",
             "uLayer": 0,
             "interaction": 0,
-            "id": "d8a0f815-a40f-4f13-8c8d-8724696ea10b"
+            "id": "260d816d-56b9-48f1-b6d1-143fb9c6484e"
+        },
+        {
+            "size": {
+                "x": 1.7799999713897706,
+                "y": 0.8299999833106995
+            },
+            "position": {
+                "x": 0.4444437026977539,
+                "y": 1.25
+            },
+            "offset": {
+                "x": 0.4449999928474426,
+                "y": 0.0
+            },
+            "blocks": [
+                {
+                    "x": 10,
+                    "y": 7,
+                    "z": 2
+                },
+                {
+                    "x": 11,
+                    "y": 7,
+                    "z": 2
+                }
+            ],
+            "isTrigger": false,
+            "isHorizontal": true,
+            "hasDirection": true,
+            "headIdx": 0,
+            "name": "Col23",
+            "uLayer": 0,
+            "interaction": 0,
+            "id": "803d8184-d3bd-49f1-840a-6943c17a0dff"
+        },
+        {
+            "size": {
+                "x": 0.4449999928474426,
+                "y": 0.8299999833106995
+            },
+            "position": {
+                "x": -1.1111111640930176,
+                "y": -0.41666656732559206
+            },
+            "offset": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "blocks": [
+                {
+                    "x": 8,
+                    "y": 5,
+                    "z": 1
+                }
+            ],
+            "isTrigger": true,
+            "isHorizontal": true,
+            "hasDirection": true,
+            "headIdx": 0,
+            "name": "Col14",
+            "uLayer": 10,
+            "interaction": 1,
+            "id": "20a4793e-4f37-4f8a-a1f3-19ff716864b4"
+        },
+        {
+            "size": {
+                "x": 0.4449999928474426,
+                "y": 0.8299999833106995
+            },
+            "position": {
+                "x": 0.6666669845581055,
+                "y": -0.41666656732559206
+            },
+            "offset": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "blocks": [
+                {
+                    "x": 10,
+                    "y": 5,
+                    "z": 2
+                }
+            ],
+            "isTrigger": true,
+            "isHorizontal": true,
+            "hasDirection": true,
+            "headIdx": 0,
+            "name": "Col19",
+            "uLayer": 10,
+            "interaction": 1,
+            "id": "56a3b9ef-a0a9-4907-a327-ab9c96d58e5b"
+        },
+        {
+            "size": {
+                "x": 0.4449999928474426,
+                "y": 0.8299999833106995
+            },
+            "position": {
+                "x": -1.555555820465088,
+                "y": -0.41666656732559206
+            },
+            "offset": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "blocks": [
+                {
+                    "x": 8,
+                    "y": 5,
+                    "z": 2
+                }
+            ],
+            "isTrigger": true,
+            "isHorizontal": true,
+            "hasDirection": true,
+            "headIdx": 0,
+            "name": "Col18",
+            "uLayer": 10,
+            "interaction": 1,
+            "id": "5298f503-53ee-4b89-9293-d9d4df0ded86"
+        },
+        {
+            "size": {
+                "x": 0.4449999928474426,
+                "y": 0.8299999833106995
+            },
+            "position": {
+                "x": 0.22222232818603517,
+                "y": -0.41666656732559206
+            },
+            "offset": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "blocks": [
+                {
+                    "x": 10,
+                    "y": 5,
+                    "z": 1
+                }
+            ],
+            "isTrigger": true,
+            "isHorizontal": true,
+            "hasDirection": true,
+            "headIdx": 0,
+            "name": "Col15",
+            "uLayer": 10,
+            "interaction": 1,
+            "id": "808ba6e2-2c88-433f-acf7-67d7bad9c07b"
         },
         {
             "size": {
@@ -892,101 +940,14 @@
                     "z": 1
                 }
             ],
-            "isTrigger": false,
+            "isTrigger": true,
             "isHorizontal": true,
             "hasDirection": true,
             "headIdx": 0,
-            "name": "Col21",
+            "name": "Col11",
             "uLayer": 0,
             "interaction": 0,
-            "id": "690b9b50-2a5a-4c67-a699-e19d6dded300"
-        },
-        {
-            "size": {
-                "x": 0.8899999856948853,
-                "y": 0.41499999165534975
-            },
-            "position": {
-                "x": 1.3333330154418946,
-                "y": 2.2916669845581056
-            },
-            "offset": {
-                "x": 0.0,
-                "y": 0.0
-            },
-            "blocks": [
-                {
-                    "x": 11,
-                    "y": 8,
-                    "z": 1
-                }
-            ],
-            "isTrigger": false,
-            "isHorizontal": true,
-            "hasDirection": true,
-            "headIdx": 0,
-            "name": "Col22",
-            "uLayer": 0,
-            "interaction": 0,
-            "id": "9c86ca80-611c-4a0c-a165-95047c11febe"
-        },
-        {
-            "size": {
-                "x": 0.8899999856948853,
-                "y": 0.41499999165534975
-            },
-            "position": {
-                "x": -0.4444446563720703,
-                "y": 0.20833313465118409
-            },
-            "offset": {
-                "x": 0.0,
-                "y": 0.0
-            },
-            "blocks": [
-                {
-                    "x": 9,
-                    "y": 6,
-                    "z": 1
-                }
-            ],
-            "isTrigger": false,
-            "isHorizontal": true,
-            "hasDirection": true,
-            "headIdx": 0,
-            "name": "Col23",
-            "uLayer": 0,
-            "interaction": 0,
-            "id": "6c78ef18-b94d-45b7-9180-81220925df63"
-        },
-        {
-            "size": {
-                "x": 0.8899999856948853,
-                "y": 0.41499999165534975
-            },
-            "position": {
-                "x": -0.4444446563720703,
-                "y": -0.625
-            },
-            "offset": {
-                "x": 0.0,
-                "y": 0.0
-            },
-            "blocks": [
-                {
-                    "x": 9,
-                    "y": 5,
-                    "z": 1
-                }
-            ],
-            "isTrigger": false,
-            "isHorizontal": true,
-            "hasDirection": true,
-            "headIdx": 0,
-            "name": "Col24",
-            "uLayer": 0,
-            "interaction": 0,
-            "id": "51c64b26-e9a8-49ea-b99f-6f914054ddd6"
+            "id": "be64f51a-d6d1-4e72-9673-6aada69ab45b"
         }
     ],
     "cells": [
@@ -31317,7 +31278,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "7226f45a-7c44-4a0b-9d93-ebd38292853b",
+                    "colliderId": "f351e8da-be35-4da1-8a7b-eb8df56e8300",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -31327,8 +31288,8 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 0,
-                            "type": 0,
+                            "color": 1,
+                            "type": 3,
                             "idx": 0,
                             "amount": {
                                 "x": 0,
@@ -31673,7 +31634,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "7226f45a-7c44-4a0b-9d93-ebd38292853b",
+                    "colliderId": "f351e8da-be35-4da1-8a7b-eb8df56e8300",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -32029,7 +31990,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "7226f45a-7c44-4a0b-9d93-ebd38292853b",
+                    "colliderId": "f351e8da-be35-4da1-8a7b-eb8df56e8300",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -32385,7 +32346,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "7226f45a-7c44-4a0b-9d93-ebd38292853b",
+                    "colliderId": "f351e8da-be35-4da1-8a7b-eb8df56e8300",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -32741,7 +32702,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "7226f45a-7c44-4a0b-9d93-ebd38292853b",
+                    "colliderId": "f351e8da-be35-4da1-8a7b-eb8df56e8300",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -33097,7 +33058,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "7226f45a-7c44-4a0b-9d93-ebd38292853b",
+                    "colliderId": "f351e8da-be35-4da1-8a7b-eb8df56e8300",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -33453,7 +33414,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "7226f45a-7c44-4a0b-9d93-ebd38292853b",
+                    "colliderId": "f351e8da-be35-4da1-8a7b-eb8df56e8300",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -33819,9 +33780,9 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 0,
-                            "type": 0,
-                            "idx": 0,
+                            "color": 1,
+                            "type": 3,
+                            "idx": 1,
                             "amount": {
                                 "x": 0,
                                 "y": 0
@@ -38793,7 +38754,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "02ac2e8f-7424-4ebb-9158-b381d67c7b1e",
+                    "colliderId": "c6df868b-64fb-4956-a8a4-357bd745a9d9",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -39126,7 +39087,7 @@
                         "sprite": {
                             "color": 1,
                             "type": 2,
-                            "idx": 0,
+                            "idx": 2,
                             "amount": {
                                 "x": 0,
                                 "y": 0
@@ -39135,7 +39096,7 @@
                         "posY": 5,
                         "posX": 7,
                         "hasIsHorizontal": true,
-                        "isHorizontal": true,
+                        "isHorizontal": false,
                         "colliderSize": {
                             "x": 0.0,
                             "y": 0.0
@@ -39149,9 +39110,9 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "6b5c6675-8e72-4360-b0e2-110b491a947d",
+                    "colliderId": "260d816d-56b9-48f1-b6d1-143fb9c6484e",
                     "layer": 1,
-                    "horizontal": true,
+                    "horizontal": false,
                     "hasDirection": true,
                     "objPosX": -2.222222328186035,
                     "objPosY": -0.41666656732559206
@@ -39481,10 +39442,45 @@
                     "data": {
                         "sprite": {
                             "color": 1,
-                            "type": 2,
+                            "type": 11,
                             "idx": 0,
                             "amount": {
-                                "x": 0,
+                                "x": 2,
+                                "y": 0
+                            }
+                        },
+                        "posY": 5,
+                        "posX": 8,
+                        "hasIsHorizontal": true,
+                        "isHorizontal": true,
+                        "colliderSize": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "colliderPosition": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "spriteOffset": {
+                            "x": 1.0,
+                            "y": 0.0
+                        }
+                    },
+                    "colliderId": "20a4793e-4f37-4f8a-a1f3-19ff716864b4",
+                    "layer": 1,
+                    "horizontal": true,
+                    "hasDirection": true,
+                    "objPosX": -1.1111111640930176,
+                    "objPosY": -0.41666656732559206
+                },
+                {
+                    "data": {
+                        "sprite": {
+                            "color": 1,
+                            "type": 11,
+                            "idx": 0,
+                            "amount": {
+                                "x": 2,
                                 "y": 0
                             }
                         },
@@ -39505,46 +39501,11 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "6b5c6675-8e72-4360-b0e2-110b491a947d",
-                    "layer": 1,
+                    "colliderId": "5298f503-53ee-4b89-9293-d9d4df0ded86",
+                    "layer": 2,
                     "horizontal": true,
                     "hasDirection": true,
-                    "objPosX": -1.3333330154418946,
-                    "objPosY": -0.41666656732559206
-                },
-                {
-                    "data": {
-                        "sprite": {
-                            "color": 0,
-                            "type": 0,
-                            "idx": 0,
-                            "amount": {
-                                "x": 0,
-                                "y": 0
-                            }
-                        },
-                        "posY": 5,
-                        "posX": 8,
-                        "hasIsHorizontal": false,
-                        "isHorizontal": false,
-                        "colliderSize": {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        "colliderPosition": {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        "spriteOffset": {
-                            "x": 0.0,
-                            "y": 0.0
-                        }
-                    },
-                    "colliderId": "",
-                    "layer": 2,
-                    "horizontal": false,
-                    "hasDirection": false,
-                    "objPosX": -1.3333330154418946,
+                    "objPosX": -1.555555820465088,
                     "objPosY": -0.41666656732559206
                 },
                 {
@@ -39837,11 +39798,11 @@
                     "data": {
                         "sprite": {
                             "color": 1,
-                            "type": 13,
+                            "type": 11,
                             "idx": 0,
                             "amount": {
-                                "x": 0,
-                                "y": 2
+                                "x": 2,
+                                "y": 0
                             }
                         },
                         "posY": 5,
@@ -39861,28 +39822,28 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "51c64b26-e9a8-49ea-b99f-6f914054ddd6",
+                    "colliderId": "7a1d2c13-0d15-46ec-95e9-16428702593e",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
-                    "objPosX": -0.4444446563720703,
-                    "objPosY": -0.625
+                    "objPosX": -0.6666665077209473,
+                    "objPosY": -0.41666656732559206
                 },
                 {
                     "data": {
                         "sprite": {
-                            "color": 0,
-                            "type": 0,
+                            "color": 1,
+                            "type": 11,
                             "idx": 0,
                             "amount": {
-                                "x": 0,
+                                "x": 2,
                                 "y": 0
                             }
                         },
                         "posY": 5,
                         "posX": 9,
-                        "hasIsHorizontal": false,
-                        "isHorizontal": false,
+                        "hasIsHorizontal": true,
+                        "isHorizontal": true,
                         "colliderSize": {
                             "x": 0.0,
                             "y": 0.0
@@ -39892,15 +39853,15 @@
                             "y": 0.0
                         },
                         "spriteOffset": {
-                            "x": 0.0,
+                            "x": 1.0,
                             "y": 0.0
                         }
                     },
-                    "colliderId": "",
+                    "colliderId": "5eaf6cc3-a050-41fb-b249-b46d06dbd4a7",
                     "layer": 2,
-                    "horizontal": false,
-                    "hasDirection": false,
-                    "objPosX": -0.4444446563720703,
+                    "horizontal": true,
+                    "hasDirection": true,
+                    "objPosX": -0.22222185134887696,
                     "objPosY": -0.41666656732559206
                 },
                 {
@@ -40193,11 +40154,11 @@
                     "data": {
                         "sprite": {
                             "color": 1,
-                            "type": 13,
+                            "type": 11,
                             "idx": 0,
                             "amount": {
-                                "x": 0,
-                                "y": 2
+                                "x": 2,
+                                "y": 0
                             }
                         },
                         "posY": 5,
@@ -40217,28 +40178,28 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "f48bc543-1872-40af-84e4-606b17ebfc99",
+                    "colliderId": "808ba6e2-2c88-433f-acf7-67d7bad9c07b",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
-                    "objPosX": 0.4444437026977539,
-                    "objPosY": -0.625
+                    "objPosX": 0.22222232818603517,
+                    "objPosY": -0.41666656732559206
                 },
                 {
                     "data": {
                         "sprite": {
-                            "color": 0,
-                            "type": 0,
+                            "color": 1,
+                            "type": 11,
                             "idx": 0,
                             "amount": {
-                                "x": 0,
+                                "x": 2,
                                 "y": 0
                             }
                         },
                         "posY": 5,
                         "posX": 10,
-                        "hasIsHorizontal": false,
-                        "isHorizontal": false,
+                        "hasIsHorizontal": true,
+                        "isHorizontal": true,
                         "colliderSize": {
                             "x": 0.0,
                             "y": 0.0
@@ -40248,15 +40209,15 @@
                             "y": 0.0
                         },
                         "spriteOffset": {
-                            "x": 0.0,
+                            "x": 1.0,
                             "y": 0.0
                         }
                     },
-                    "colliderId": "",
+                    "colliderId": "56a3b9ef-a0a9-4907-a327-ab9c96d58e5b",
                     "layer": 2,
-                    "horizontal": false,
-                    "hasDirection": false,
-                    "objPosX": 0.4444437026977539,
+                    "horizontal": true,
+                    "hasDirection": true,
+                    "objPosX": 0.6666669845581055,
                     "objPosY": -0.41666656732559206
                 },
                 {
@@ -40548,44 +40509,9 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 1,
-                            "type": 2,
-                            "idx": 0,
-                            "amount": {
-                                "x": 0,
-                                "y": 0
-                            }
-                        },
-                        "posY": 5,
-                        "posX": 11,
-                        "hasIsHorizontal": false,
-                        "isHorizontal": false,
-                        "colliderSize": {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        "colliderPosition": {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        "spriteOffset": {
-                            "x": 0.0,
-                            "y": 0.0
-                        }
-                    },
-                    "colliderId": "f5933bf8-87c2-450d-9cb9-152fa5fded5f",
-                    "layer": 1,
-                    "horizontal": false,
-                    "hasDirection": false,
-                    "objPosX": 1.3333330154418946,
-                    "objPosY": -0.41666656732559206
-                },
-                {
-                    "data": {
-                        "sprite": {
                             "color": 0,
                             "type": 0,
-                            "idx": 0,
+                            "idx": -1,
                             "amount": {
                                 "x": 0,
                                 "y": 0
@@ -40609,9 +40535,44 @@
                         }
                     },
                     "colliderId": "",
-                    "layer": 2,
+                    "layer": 1,
                     "horizontal": false,
                     "hasDirection": false,
+                    "objPosX": 1.3333330154418946,
+                    "objPosY": -0.41666656732559206
+                },
+                {
+                    "data": {
+                        "sprite": {
+                            "color": 1,
+                            "type": 10,
+                            "idx": 0,
+                            "amount": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        },
+                        "posY": 5,
+                        "posX": 11,
+                        "hasIsHorizontal": true,
+                        "isHorizontal": true,
+                        "colliderSize": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "colliderPosition": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "spriteOffset": {
+                            "x": 0.0,
+                            "y": 0.0
+                        }
+                    },
+                    "colliderId": "0a32a1d1-327c-4a51-86b6-7dab700a6fbd",
+                    "layer": 2,
+                    "horizontal": true,
+                    "hasDirection": true,
                     "objPosX": 1.3333330154418946,
                     "objPosY": -0.41666656732559206
                 },
@@ -45888,9 +45849,9 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 1,
-                            "type": 2,
-                            "idx": 0,
+                            "color": 0,
+                            "type": 0,
+                            "idx": -1,
                             "amount": {
                                 "x": 0,
                                 "y": 0
@@ -45913,7 +45874,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "efa26770-e343-4cf0-adbf-d5898a75a7f9",
+                    "colliderId": "",
                     "layer": 1,
                     "horizontal": false,
                     "hasDirection": true,
@@ -46244,9 +46205,9 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 0,
-                            "type": 0,
-                            "idx": 0,
+                            "color": 1,
+                            "type": 2,
+                            "idx": 2,
                             "amount": {
                                 "x": 0,
                                 "y": 0
@@ -46254,7 +46215,7 @@
                         },
                         "posY": 6,
                         "posX": 7,
-                        "hasIsHorizontal": false,
+                        "hasIsHorizontal": true,
                         "isHorizontal": false,
                         "colliderSize": {
                             "x": 0.0,
@@ -46269,10 +46230,10 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "",
+                    "colliderId": "260d816d-56b9-48f1-b6d1-143fb9c6484e",
                     "layer": 1,
                     "horizontal": false,
-                    "hasDirection": false,
+                    "hasDirection": true,
                     "objPosX": -2.222222328186035,
                     "objPosY": 0.4166668653488159
                 },
@@ -46600,9 +46561,9 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 1,
-                            "type": 2,
-                            "idx": 0,
+                            "color": 0,
+                            "type": 0,
+                            "idx": -1,
                             "amount": {
                                 "x": 0,
                                 "y": 0
@@ -46610,8 +46571,8 @@
                         },
                         "posY": 6,
                         "posX": 8,
-                        "hasIsHorizontal": false,
-                        "isHorizontal": false,
+                        "hasIsHorizontal": true,
+                        "isHorizontal": true,
                         "colliderSize": {
                             "x": 0.0,
                             "y": 0.0
@@ -46625,10 +46586,10 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "e6503146-aaf0-4a15-8b49-0a97a4167a43",
+                    "colliderId": "",
                     "layer": 1,
-                    "horizontal": false,
-                    "hasDirection": false,
+                    "horizontal": true,
+                    "hasDirection": true,
                     "objPosX": -1.3333330154418946,
                     "objPosY": 0.4166668653488159
                 },
@@ -46956,12 +46917,12 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 1,
-                            "type": 13,
-                            "idx": 0,
+                            "color": 0,
+                            "type": 0,
+                            "idx": -1,
                             "amount": {
                                 "x": 0,
-                                "y": 2
+                                "y": 0
                             }
                         },
                         "posY": 6,
@@ -46981,7 +46942,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "6c78ef18-b94d-45b7-9180-81220925df63",
+                    "colliderId": "",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -47312,12 +47273,12 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 1,
-                            "type": 13,
-                            "idx": 0,
+                            "color": 0,
+                            "type": 0,
+                            "idx": -1,
                             "amount": {
                                 "x": 0,
-                                "y": 2
+                                "y": 0
                             }
                         },
                         "posY": 6,
@@ -47337,7 +47298,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "961bf9a8-01f5-49a1-b753-6c57b934726f",
+                    "colliderId": "",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -53008,9 +52969,9 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 1,
-                            "type": 2,
-                            "idx": 0,
+                            "color": 0,
+                            "type": 0,
+                            "idx": -1,
                             "amount": {
                                 "x": 0,
                                 "y": 0
@@ -53033,7 +52994,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "efa26770-e343-4cf0-adbf-d5898a75a7f9",
+                    "colliderId": "",
                     "layer": 1,
                     "horizontal": false,
                     "hasDirection": true,
@@ -53364,12 +53325,12 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 1,
-                            "type": 13,
-                            "idx": 0,
+                            "color": 0,
+                            "type": 0,
+                            "idx": -1,
                             "amount": {
                                 "x": 0,
-                                "y": 2
+                                "y": 0
                             }
                         },
                         "posY": 7,
@@ -53389,7 +53350,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "523fef13-ee41-45b6-a5be-f7dc423aa0cd",
+                    "colliderId": "",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -53721,7 +53682,7 @@
                     "data": {
                         "sprite": {
                             "color": 1,
-                            "type": 13,
+                            "type": 1,
                             "idx": 0,
                             "amount": {
                                 "x": 0,
@@ -53742,15 +53703,15 @@
                         },
                         "spriteOffset": {
                             "x": 0.0,
-                            "y": 1.0
+                            "y": 0.0
                         }
                     },
-                    "colliderId": "b161c94b-1c6f-480c-aee6-679c7be72fda",
+                    "colliderId": "5a246b7d-0975-4144-ad36-6d24030fbd3b",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
                     "objPosX": -1.3333330154418946,
-                    "objPosY": 1.458333134651184
+                    "objPosY": 1.041666865348816
                 },
                 {
                     "data": {
@@ -54077,7 +54038,7 @@
                     "data": {
                         "sprite": {
                             "color": 1,
-                            "type": 13,
+                            "type": 1,
                             "idx": 0,
                             "amount": {
                                 "x": 0,
@@ -54101,7 +54062,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "d8a0f815-a40f-4f13-8c8d-8724696ea10b",
+                    "colliderId": "e9419bba-5544-46ee-805c-e52a99cf0112",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -54467,8 +54428,8 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 0,
-                            "type": 0,
+                            "color": 2,
+                            "type": 4,
                             "idx": 0,
                             "amount": {
                                 "x": 0,
@@ -54477,8 +54438,8 @@
                         },
                         "posY": 7,
                         "posX": 10,
-                        "hasIsHorizontal": false,
-                        "isHorizontal": false,
+                        "hasIsHorizontal": true,
+                        "isHorizontal": true,
                         "colliderSize": {
                             "x": 0.0,
                             "y": 0.0
@@ -54492,10 +54453,10 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "",
+                    "colliderId": "803d8184-d3bd-49f1-840a-6943c17a0dff",
                     "layer": 2,
-                    "horizontal": false,
-                    "hasDirection": false,
+                    "horizontal": true,
+                    "hasDirection": true,
                     "objPosX": 0.4444437026977539,
                     "objPosY": 1.25
                 },
@@ -54788,44 +54749,9 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 1,
-                            "type": 2,
-                            "idx": 0,
-                            "amount": {
-                                "x": 0,
-                                "y": 0
-                            }
-                        },
-                        "posY": 7,
-                        "posX": 11,
-                        "hasIsHorizontal": false,
-                        "isHorizontal": false,
-                        "colliderSize": {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        "colliderPosition": {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        "spriteOffset": {
-                            "x": 0.0,
-                            "y": 0.0
-                        }
-                    },
-                    "colliderId": "476fc763-1ceb-4751-bc14-7d85dfd82541",
-                    "layer": 1,
-                    "horizontal": false,
-                    "hasDirection": false,
-                    "objPosX": 1.3333330154418946,
-                    "objPosY": 1.25
-                },
-                {
-                    "data": {
-                        "sprite": {
                             "color": 0,
                             "type": 0,
-                            "idx": 0,
+                            "idx": -1,
                             "amount": {
                                 "x": 0,
                                 "y": 0
@@ -54849,9 +54775,44 @@
                         }
                     },
                     "colliderId": "",
-                    "layer": 2,
+                    "layer": 1,
                     "horizontal": false,
                     "hasDirection": false,
+                    "objPosX": 1.3333330154418946,
+                    "objPosY": 1.25
+                },
+                {
+                    "data": {
+                        "sprite": {
+                            "color": 1,
+                            "type": 4,
+                            "idx": 0,
+                            "amount": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        },
+                        "posY": 7,
+                        "posX": 11,
+                        "hasIsHorizontal": true,
+                        "isHorizontal": true,
+                        "colliderSize": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "colliderPosition": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "spriteOffset": {
+                            "x": 0.0,
+                            "y": 0.0
+                        }
+                    },
+                    "colliderId": "803d8184-d3bd-49f1-840a-6943c17a0dff",
+                    "layer": 2,
+                    "horizontal": true,
+                    "hasDirection": true,
                     "objPosX": 1.3333330154418946,
                     "objPosY": 1.25
                 },
@@ -60128,9 +60089,9 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 1,
-                            "type": 2,
-                            "idx": 0,
+                            "color": 0,
+                            "type": 0,
+                            "idx": -1,
                             "amount": {
                                 "x": 0,
                                 "y": 0
@@ -60153,7 +60114,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "efa26770-e343-4cf0-adbf-d5898a75a7f9",
+                    "colliderId": "",
                     "layer": 1,
                     "horizontal": false,
                     "hasDirection": true,
@@ -60163,8 +60124,8 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 0,
-                            "type": 0,
+                            "color": 1,
+                            "type": 5,
                             "idx": 0,
                             "amount": {
                                 "x": 0,
@@ -60173,8 +60134,8 @@
                         },
                         "posY": 8,
                         "posX": 6,
-                        "hasIsHorizontal": false,
-                        "isHorizontal": false,
+                        "hasIsHorizontal": true,
+                        "isHorizontal": true,
                         "colliderSize": {
                             "x": 0.0,
                             "y": 0.0
@@ -60188,10 +60149,10 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "",
+                    "colliderId": "b99c239b-e0a3-4fa8-9475-f496bdb8e228",
                     "layer": 2,
-                    "horizontal": false,
-                    "hasDirection": false,
+                    "horizontal": true,
+                    "hasDirection": true,
                     "objPosX": -3.111111640930176,
                     "objPosY": 2.0833330154418947
                 },
@@ -60484,12 +60445,12 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 1,
-                            "type": 13,
-                            "idx": 0,
+                            "color": 0,
+                            "type": 0,
+                            "idx": -1,
                             "amount": {
                                 "x": 0,
-                                "y": 2
+                                "y": 0
                             }
                         },
                         "posY": 8,
@@ -60509,7 +60470,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "db8454c5-4176-47cf-a4d2-bc9dde42d2fd",
+                    "colliderId": "",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -60519,8 +60480,8 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 0,
-                            "type": 0,
+                            "color": 2,
+                            "type": 5,
                             "idx": 0,
                             "amount": {
                                 "x": 0,
@@ -60529,8 +60490,8 @@
                         },
                         "posY": 8,
                         "posX": 7,
-                        "hasIsHorizontal": false,
-                        "isHorizontal": false,
+                        "hasIsHorizontal": true,
+                        "isHorizontal": true,
                         "colliderSize": {
                             "x": 0.0,
                             "y": 0.0
@@ -60544,10 +60505,10 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "",
+                    "colliderId": "9b7af813-1a20-4a1a-98e3-e37603b0ae15",
                     "layer": 2,
-                    "horizontal": false,
-                    "hasDirection": false,
+                    "horizontal": true,
+                    "hasDirection": true,
                     "objPosX": -2.222222328186035,
                     "objPosY": 2.0833330154418947
                 },
@@ -60840,9 +60801,9 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 1,
-                            "type": 2,
-                            "idx": 0,
+                            "color": 0,
+                            "type": 0,
+                            "idx": -1,
                             "amount": {
                                 "x": 0,
                                 "y": 0
@@ -60865,7 +60826,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "2d2cdf86-7dff-4cba-be48-4da2b319c97b",
+                    "colliderId": "",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -61196,9 +61157,9 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 1,
-                            "type": 2,
-                            "idx": 0,
+                            "color": 0,
+                            "type": 0,
+                            "idx": -1,
                             "amount": {
                                 "x": 0,
                                 "y": 0
@@ -61221,7 +61182,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "2d2cdf86-7dff-4cba-be48-4da2b319c97b",
+                    "colliderId": "",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -61553,7 +61514,7 @@
                     "data": {
                         "sprite": {
                             "color": 1,
-                            "type": 13,
+                            "type": 1,
                             "idx": 0,
                             "amount": {
                                 "x": 0,
@@ -61577,7 +61538,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "690b9b50-2a5a-4c67-a699-e19d6dded300",
+                    "colliderId": "be64f51a-d6d1-4e72-9673-6aada69ab45b",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -61909,7 +61870,7 @@
                     "data": {
                         "sprite": {
                             "color": 1,
-                            "type": 13,
+                            "type": 1,
                             "idx": 0,
                             "amount": {
                                 "x": 0,
@@ -61930,15 +61891,15 @@
                         },
                         "spriteOffset": {
                             "x": 0.0,
-                            "y": 1.0
+                            "y": 0.0
                         }
                     },
-                    "colliderId": "9c86ca80-611c-4a0c-a165-95047c11febe",
+                    "colliderId": "95a0526a-704b-4c5f-90db-e3be70598516",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
                     "objPosX": 1.3333330154418946,
-                    "objPosY": 2.2916669845581056
+                    "objPosY": 1.875
                 },
                 {
                     "data": {
@@ -66917,7 +66878,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "a522ad7f-e493-4e2b-93c0-57472da0c53c",
+                    "colliderId": "1171dc93-55b4-4e44-85fb-f69e75159fb6",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -66927,9 +66888,9 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 0,
-                            "type": 0,
-                            "idx": 0,
+                            "color": 1,
+                            "type": 3,
+                            "idx": 2,
                             "amount": {
                                 "x": 0,
                                 "y": 0
@@ -67273,7 +67234,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "a522ad7f-e493-4e2b-93c0-57472da0c53c",
+                    "colliderId": "1171dc93-55b4-4e44-85fb-f69e75159fb6",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -67629,7 +67590,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "a522ad7f-e493-4e2b-93c0-57472da0c53c",
+                    "colliderId": "1171dc93-55b4-4e44-85fb-f69e75159fb6",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -67962,7 +67923,7 @@
                         "sprite": {
                             "color": 1,
                             "type": 2,
-                            "idx": 0,
+                            "idx": 2,
                             "amount": {
                                 "x": 0,
                                 "y": 0
@@ -67985,7 +67946,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "a522ad7f-e493-4e2b-93c0-57472da0c53c",
+                    "colliderId": "1171dc93-55b4-4e44-85fb-f69e75159fb6",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -68341,7 +68302,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "a522ad7f-e493-4e2b-93c0-57472da0c53c",
+                    "colliderId": "1171dc93-55b4-4e44-85fb-f69e75159fb6",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -68697,7 +68658,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "a522ad7f-e493-4e2b-93c0-57472da0c53c",
+                    "colliderId": "1171dc93-55b4-4e44-85fb-f69e75159fb6",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -69053,7 +69014,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "a522ad7f-e493-4e2b-93c0-57472da0c53c",
+                    "colliderId": "1171dc93-55b4-4e44-85fb-f69e75159fb6",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -69409,7 +69370,7 @@
                             "y": 0.0
                         }
                     },
-                    "colliderId": "a522ad7f-e493-4e2b-93c0-57472da0c53c",
+                    "colliderId": "1171dc93-55b4-4e44-85fb-f69e75159fb6",
                     "layer": 1,
                     "horizontal": true,
                     "hasDirection": true,
@@ -69419,9 +69380,9 @@
                 {
                     "data": {
                         "sprite": {
-                            "color": 0,
-                            "type": 0,
-                            "idx": 0,
+                            "color": 1,
+                            "type": 3,
+                            "idx": 3,
                             "amount": {
                                 "x": 0,
                                 "y": 0

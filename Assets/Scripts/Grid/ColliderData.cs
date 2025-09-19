@@ -51,7 +51,7 @@ namespace Xolito.Utilities
         public void AddLast(SubBlock block) => blocks.Insert(blocks.Count, block);
         public void RemoveFirst()
         {
-            blocks[0].collider = null;
+            blocks[0].ColliderId = null;
             blocks.RemoveAt(0);
         }
         public void RemoveLast()
@@ -59,14 +59,14 @@ namespace Xolito.Utilities
             if (headIdx == blocks.Count - 1)
                 headIdx = blocks.Count - 2;
 
-            blocks[blocks.Count - 1].collider = null;
+            blocks[blocks.Count - 1].ColliderId = null;
             blocks.RemoveAt(blocks.Count - 1);
         }
 
         public void Clear()
         {
             foreach (var block in blocks)
-                block.collider = null;
+                block.ColliderId = null;
 
             blocks.Clear();
             _destructionCallback?.Invoke(item);

@@ -36,10 +36,10 @@ namespace Xolito.Utilities
             get => sprite != null ? sprite.type : BlockType.None;
             set
             {
-                if (sprite != null) 
-                { 
-                    sprite.type = value; 
-                }
+                //if (sprite != null) 
+                //{ 
+                //}
+                sprite = new SpriteData(sprite.color, value, sprite.amount, sprite.idx);
             }
         }
 

@@ -101,5 +101,14 @@ namespace Xolito.Core
             //coinsCounter.GetComponent<TMPro.TextMeshProUGUI>().text = coins.ToString();
             print(currentCoins);
         }
+
+        public void Clear()
+        {
+            startPointUp = null;
+            endPointUp = null;
+            startPointDown = null;
+            endPointDown = null;
+            currentCoins = 0;
+        }
     }
 }

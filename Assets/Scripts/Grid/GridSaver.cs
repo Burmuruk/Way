@@ -5,7 +5,6 @@ using UnityEngine;
 using System.Linq;
 using Xolito.Core;
 
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -14,7 +13,7 @@ namespace Xolito.Utilities
 {
     internal class GridSaver
     {
-        public void SaveToTxt(GridBlock[,] grid, List<ColliderData> colliders, GridSprites sprites, string relativePathInAssets)
+        public void SaveToTxt(GridBlock[,] grid, Dictionary<string, ColliderData> colliders, GridSprites sprites, string relativePathInAssets)
         {
             if (grid == null) throw new ArgumentNullException(nameof(grid));
             if (colliders == null) throw new ArgumentNullException(nameof(colliders));
@@ -24,7 +23,7 @@ namespace Xolito.Utilities
             {
                 rows = grid.GetLength(0),
                 cols = grid.GetLength(1),
-                colliders = colliders.Select(c => new ColliderDataDTO().From(c)).ToList(),
+                colliders = colliders.Select(c => new ColliderDataDTO().From(c.Value, c.Key)).ToList(),
                 spritesGuid = GetGuidForAsset(sprites)
             };
 
@@ -57,7 +56,7 @@ namespace Xolito.Utilities
 #endif
         }
 
-        public (GridBlock[,] grid, List<ColliderData> colliders, GridSprites sprites) LoadFromTxt(string relativePathInAssets, Action<GameObject> destructionCallback)
+        public (GridBlock[,] grid, Dictionary<string, ColliderData> colliders, GridSprites sprites) LoadFromTxt(string relativePathInAssets, Action<GameObject> destructionCallback)
         {
             return LoadFromTxt(relativePathInAssets, destructionCallback, CreateParents());
         }
@@ -86,7 +85,7 @@ namespace Xolito.Utilities
             return parents;
         }
 
-        public (GridBlock[,] grid, List<ColliderData> colliders, GridSprites sprites) LoadFromTxt(string relativePathInAssets, Action<GameObject> destructionCallback, Dictionary<BlockType, GameObject> parents)
+        public (GridBlock[,] grid, Dictionary<string, ColliderData> colliders, GridSprites sprites) LoadFromTxt(string relativePathInAssets, Action<GameObject> destructionCallback, Dictionary<BlockType, GameObject> parents)
         {
             if (string.IsNullOrWhiteSpace(relativePathInAssets)) throw new ArgumentException("Ruta inválida", nameof(relativePathInAssets));
 
@@ -118,13 +117,18 @@ namespace Xolito.Utilities
                 }
             }
 
-            var colliders = dto.colliders.Select(c => c.ToColliderData(grid, destructionCallback)).ToList() ?? new List<ColliderData>();
-            SetCollidersParent(parents, colliders);
+            List<(string id, ColliderData data)> colliders = dto.colliders.Select(c => (c.id, c.ToColliderData(grid, destructionCallback))).ToList();
+            Dictionary<string, ColliderData> colsDic = new();
 
-            return (grid, colliders, sprites);
+            if (colliders.Count > 0)
+                colliders.ForEach(c => colsDic.Add(c.id, c.data));
+
+            SetCollidersParent(parents, colsDic);
+
+            return (grid, colsDic, sprites);
         }
 
-        private static void SetCollidersParent(Dictionary<BlockType, GameObject> parents, List<ColliderData> colliders)
+        private static void SetCollidersParent(Dictionary<BlockType, GameObject> parents, Dictionary<string, ColliderData> colliders)
         {
             var parent = parents.First().Value.transform.parent;
             Transform collidersParent = parent;
@@ -133,7 +137,11 @@ namespace Xolito.Utilities
                 if (parent.GetChild(i).name == "Colliders")
                     collidersParent = parent.GetChild(i);
             }
-            colliders.ForEach(c => c.collider.transform.parent = collidersParent);
+
+            foreach (var col in colliders)
+            {
+                col.Value.collider.transform.parent = collidersParent;
+            }
         }
 
         private Vector3 ScreenToWorldPoint(SubBlock block, int columns, int rows, GridSprites sprites)
@@ -277,41 +285,56 @@ namespace Xolito.Utilities
         public Vector2 offset;
         public List<Vector3Int> blocks;
         public bool isTrigger;
-        public bool? isHorizontal;
+        public bool isHorizontal;
+        public bool hasDirection;
         public int headIdx;
         public string name;
         public int uLayer;
         public int interaction;
+        public string id;
 
-        public ColliderDataDTO From(ColliderData cd)
+        public ColliderDataDTO From(ColliderData cd, string key)
         {
-            var dto = new ColliderDataDTO
+            if (cd == null) return null;
+            try
             {
-                size = cd.collider != null ? cd.collider.size : Vector2.zero,
-                position = cd.collider != null ? cd.collider.transform.position : Vector2.zero,
-                offset = cd.collider.offset,
-                blocks = cd.blocks != null ? new List<Vector3Int>(cd.blocks.ConvertAll(b =>
-                    new Vector3Int(b.Position.x, b.Position.y, b.Layer))) : new List<Vector3Int>(),
-                isTrigger = cd.collider != null && cd.collider.isTrigger,
-                isHorizontal = cd.isHorizontal,
-                headIdx = cd.headIdx,
-                name = cd.item.name,
-                uLayer = cd.collider.gameObject.layer,
-                
-            };
-            if (cd.collider.TryGetComponent<InteractableObject>(out var io))
-            {
-                dto.interaction = (int)io.Interaction;
-            }
-            else
-                dto.interaction = 0;
+                var dto = new ColliderDataDTO
+                {
+                    size = cd.collider != null ? cd.collider.size : Vector2.zero,
+                    position = cd.collider != null ? cd.collider.transform.position : Vector2.zero,
+                    offset = cd.collider.offset,
+                    blocks = cd.blocks != null ? new List<Vector3Int>(cd.blocks.ConvertAll(b =>
+                        new Vector3Int(b.Position.x, b.Position.y, b.Layer))) : new List<Vector3Int>(),
+                    isTrigger = cd.collider != null && cd.collider.isTrigger,
+                    isHorizontal = cd.isHorizontal ?? false,
+                    hasDirection = cd.isHorizontal.HasValue,
+                    headIdx = cd.headIdx,
+                    name = cd.item.name,
+                    uLayer = cd.collider != null ? cd.collider.gameObject.layer : 0,
+                    id = key,
 
-            return dto;
+                };
+                if (cd.collider.TryGetComponent<InteractableObject>(out var io))
+                {
+                    dto.interaction = (int)io.Interaction;
+                }
+                else
+                    dto.interaction = 0;
+
+                return dto;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public ColliderData ToColliderData(GridBlock[,] grid, Action<GameObject> destructionCallback)
         {
-            var cd = new ColliderData(name, null, isHorizontal, Vector2Int.zero, destructionCallback)
+            bool? horizontal = hasDirection ? isHorizontal : null;
+
+            var cd = new ColliderData(name, null, horizontal, Vector2Int.zero, destructionCallback)
             {
                 headIdx = headIdx
             };
@@ -328,23 +351,16 @@ namespace Xolito.Utilities
             }
             return cd;
         }
-
-        private void SetPosition(ColliderData cd)
-        {
-            if (!isHorizontal.HasValue || isHorizontal.Value)
-                cd.collider.offset = new Vector2(.445f * (cd.blocks.Count - 1), 0);
-            else
-                cd.collider.offset = new Vector2(0, .42f * (cd.blocks.Count - 1));
-        }
     }
 
     [Serializable]
     public class SubBlockDTO
     {
         public BlockDataDTO data;
-        public int colliderIndex;
+        public string colliderId;
         public int layer;
         public bool horizontal;
+        public bool hasDirection;
         public float objPosX;
         public float objPosY;
 
@@ -353,9 +369,10 @@ namespace Xolito.Utilities
             var dto = new SubBlockDTO
             {
                 data = BlockDataDTO.From(sb.data),
-                colliderIndex = sb.collider ?? -1,
+                colliderId = sb.ColliderId,
                 layer = sb.Layer,
                 horizontal = sb.IsHorizontal ?? false,
+                hasDirection = sb.IsHorizontal.HasValue,
                 objPosX = sb.Block != null ? sb.Block.transform.position.x : 0f,
                 objPosY = sb.Block != null ? sb.Block.transform.position.y : 0f,
             };
@@ -367,9 +384,9 @@ namespace Xolito.Utilities
             var bd = data.ToBlockData();
             var sb = new SubBlockBuilder()
                 .WithData(bd)
-                .WithCollider(colliderIndex < 0 ? null : colliderIndex)
+                .WithCollider(colliderId)
                 .WithLayer(layer)
-                .WithDirection(horizontal)
+                .WithDirection(hasDirection ? horizontal : null)
                 .WithObjectPosition(new Vector2Int((int)objPosX, (int)objPosY))
                 .Build(sprites);
 
@@ -456,15 +473,15 @@ namespace Xolito.Utilities
     internal class SubBlockBuilder
     {
         private BlockData data;
-        private int? collider;
+        private string collider;
         private int layer;
         private bool? horizontal;
         private Vector2Int objPos;
 
         public SubBlockBuilder WithData(BlockData d) { data = d; return this; }
-        public SubBlockBuilder WithCollider(int? c) { collider = c; return this; }
+        public SubBlockBuilder WithCollider(string c) { collider = c; return this; }
         public SubBlockBuilder WithLayer(int l) { layer = l; return this; }
-        public SubBlockBuilder WithDirection(bool b) { horizontal = collider == null ? null : b; return this; }
+        public SubBlockBuilder WithDirection(bool? b) { horizontal = collider == null ? null : b; return this; }
         public SubBlockBuilder WithObjectPosition(Vector2Int p) { objPos = p; return this; }
 
         public SubBlock Build(GridSprites sprites)
@@ -472,21 +489,12 @@ namespace Xolito.Utilities
             var idxPos = data.position;
             var sb = new SubBlock(idxPos.y, idxPos.x, layer);
             sb.data = data;
-            sb.collider = collider;
+            sb.ColliderId = collider;
             sb.IsHorizontal = horizontal;
             sb.Sprite = data.Type != BlockType.None ? sprites.GetSprite(data.sprite.color, data.sprite.type, data.sprite.idx) : null;
             sb.Block.transform.position = new Vector3(objPos.x, objPos.y, 0f);
             sb.Block.name = $"Block{idxPos.y},{idxPos.x}_Layer{layer}";
-
             return sb;
-        }
-
-        // Si Layer tiene setter privado, puedes exponer un método en SubBlock.
-        // Como placeholder, muestro cómo podrías resolverlo si ajustas SubBlock.
-        private static void ReflectionSetLayer(SubBlock sb, int layer)
-        {
-            var p = typeof(SubBlock).GetProperty("Layer", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
-            p?.SetValue(sb, layer);
         }
     }
 

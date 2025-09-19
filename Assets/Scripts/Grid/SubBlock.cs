@@ -5,7 +5,7 @@ namespace Xolito.Utilities
     public class SubBlock
     {
         public BlockData data;
-        public int? collider;
+        public string colliderId;
 
         public int Layer { get; private set; }
         public GameObject Block { get; private set; }
@@ -23,8 +23,19 @@ namespace Xolito.Utilities
         }
         public bool? IsHorizontal { get => data.isHorizontal; set => data.isHorizontal = value; }
         public (int y, int x) Position => data.position;
-        public bool HasCollider { get => collider.HasValue; }
-
+        public bool HasCollider { get => ColliderId != null; }
+        public string ColliderId {
+            get => colliderId;
+            set
+            {
+                if (value == "")
+                {
+                    colliderId = null;
+                }
+                else
+                    colliderId = value;
+            }
+        }
         public static bool operator true(SubBlock block) => block != null;
         public static bool operator false(SubBlock block) => block == null;
         public static bool operator !(SubBlock block)
@@ -43,12 +54,13 @@ namespace Xolito.Utilities
 
             Renderer.sortingOrder = layer;
             Layer = layer;
+            ColliderId = null;
         }
 
         public void Clear()
         {
             Sprite = null;
-            data.sprite = null;
+            data.sprite = default;
             data.Type = BlockType.None;
         }
 
